@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Dog Accessories",
+        "description": "Everyday gear for comfort, safety, and active walks."
+    },
+    {
+        "name": "Walking Gear",
+        "description": "Leashes, harnesses, and protective wear for outdoor adventures."
+    },
+    {
+        "name": "Chew Toys",
+        "description": "Durable enrichment toys to keep dogs engaged and happy."
+    },
+    {
+        "name": "Dog Treats",
+        "description": "Reward snacks and functional treats for training and wellness."
+    },
+    {
+        "name": "Sale",
+        "description": "Special offers on selected pet accessories and treats."
+    }
+]

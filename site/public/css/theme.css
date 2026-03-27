@@ -1,0 +1,440 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap');
+
+:root {
+    --ves-bg: #f2f2f2;
+    --ves-bg-soft: #ffffff;
+    --ves-panel: #ffffff;
+    --ves-line: #dddddd;
+    --ves-line-strong: #bebebe;
+    --ves-text: #101720;
+    --ves-muted: #5c6672;
+    --ves-accent: #cadb2a;
+    --ves-accent-ink: #101720;
+    --ves-header: #3f3d3d;
+}
+
+body.ves-theme {
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--ves-text);
+    background:
+        linear-gradient(180deg, #f6f6f6 0%, #f1f1f1 40%, #ececec 100%);
+    min-height: 100vh;
+}
+
+.ves-theme main {
+    position: relative;
+}
+
+.ves-theme h1,
+.ves-theme h2,
+.ves-theme h3 {
+    letter-spacing: 0.02em;
+}
+
+.ves-theme .ves-kicker {
+    display: inline-block;
+    padding: 0.35rem 0.8rem;
+    border-radius: 9999px;
+    border: 1px solid #d4d4d4;
+    color: #444;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    font-weight: 600;
+}
+
+.ves-theme .ves-serif {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.ves-theme .ves-panel {
+    background: var(--ves-panel);
+    border: 1px solid var(--ves-line);
+}
+
+.ves-theme .ves-link {
+    color: var(--ves-text);
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.ves-theme .ves-link:hover {
+    color: var(--ves-accent);
+}
+
+.ves-theme .ves-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    padding: 0.75rem 1.3rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.ves-theme .ves-button:hover {
+    transform: translateY(-1px);
+}
+
+.ves-theme .ves-button-primary {
+    background: var(--ves-accent);
+    color: var(--ves-accent-ink);
+    box-shadow: 0 12px 28px rgba(177, 189, 36, 0.28);
+}
+
+.ves-theme .ves-button-primary:hover {
+    background: #d8e754;
+}
+
+.ves-theme .ves-button-secondary {
+    border: 1px solid #c9c9c9;
+    color: #2d3440;
+    background: #fff;
+}
+
+.ves-theme .ves-nav {
+    background: var(--ves-header);
+    border-bottom-color: #4a4747;
+}
+
+.ves-theme .ves-nav .ves-logo {
+    color: #ffffff;
+}
+
+.ves-theme .ves-nav .ves-nav-link {
+    color: #f2f2f2;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.ves-theme .ves-nav .ves-nav-link:hover {
+    color: var(--ves-accent);
+}
+
+.ves-theme .ves-nav form input {
+    border-color: #666;
+    background: #4b4848;
+    color: #fff;
+}
+
+.ves-theme .ves-nav form input::placeholder {
+    color: #ddd;
+}
+
+.ves-theme .ves-nav form button,
+.ves-theme .ves-nav .ves-icon-button {
+    color: #eee;
+}
+
+.ves-theme .ves-nav .ves-menu-panel,
+.ves-theme .ves-nav .ves-cart-panel {
+    background: #fff;
+    border-color: #ddd;
+    color: #101720;
+}
+
+.ves-theme .ves-home-wrap {
+    max-width: 86rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+}
+
+.ves-theme .ves-hero {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 1.2rem;
+    margin-bottom: 2.25rem;
+}
+
+.ves-theme .ves-hero-copy {
+    border-radius: 1.4rem;
+    padding: 2.3rem 2rem;
+}
+
+.ves-theme .ves-hero-title {
+    margin-top: 1rem;
+    font-size: clamp(2rem, 4.6vw, 3.7rem);
+    line-height: 1;
+    font-weight: 600;
+}
+
+.ves-theme .ves-hero-text {
+    margin-top: 1.1rem;
+    color: var(--ves-muted);
+    max-width: 37rem;
+    line-height: 1.65;
+}
+
+.ves-theme .ves-hero-actions {
+    margin-top: 1.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+}
+
+.ves-theme .ves-hero-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+}
+
+.ves-theme .ves-hero-tile {
+    border-radius: 1.1rem;
+    min-height: 13rem;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #d5d5d5;
+    background-size: cover;
+    background-position: center;
+}
+
+.ves-theme .ves-hero-tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 20%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.ves-theme .ves-hero-tile span {
+    position: absolute;
+    left: 0.8rem;
+    bottom: 0.8rem;
+    z-index: 1;
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.ves-theme .ves-section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.ves-theme .ves-section-title h2 {
+    font-size: clamp(1.6rem, 3.6vw, 2.6rem);
+    font-weight: 600;
+}
+
+.ves-theme .ves-product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.ves-theme .ves-product-card {
+    border-radius: 0;
+    overflow: hidden;
+    border: 1px solid #e3e3e3;
+    background: #fff;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.ves-theme .ves-product-card:hover {
+    transform: translateY(-2px);
+    border-color: #bdbdbd;
+}
+
+.ves-theme .ves-product-meta {
+    padding: 0.9rem 1rem 1rem;
+}
+
+.ves-theme .ves-product-name {
+    font-size: 1rem;
+    color: #161b22;
+}
+
+.ves-theme .ves-product-price {
+    margin-top: 0.45rem;
+    color: #2b2f37;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ves-theme .ves-sale-panel {
+    border-radius: 1.2rem;
+    border-color: #d2d2d2;
+    background: #fff;
+}
+
+.ves-theme .ves-sale-panel p {
+    color: var(--ves-muted);
+}
+
+.ves-theme .ves-footer {
+    margin-top: 2rem;
+    border-top: 1px solid #d9d9d9;
+    background: #f8f8f8;
+}
+
+.ves-theme .ves-footer p {
+    color: var(--ves-muted);
+}
+
+.ves-theme .ves-footer .ves-logo {
+    color: #3f3d3d;
+}
+
+.ves-theme .ves-catalog-wrap {
+    max-width: 82rem;
+    margin: 0 auto;
+    padding: 2.25rem 1.2rem 4rem;
+}
+
+.ves-theme .ves-catalog-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 2rem;
+}
+
+.ves-theme .ves-catalog-sidebar h2 {
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+}
+
+.ves-theme .ves-catalog-sidebar ul {
+    border-top: 2px solid #656565;
+    padding-top: 0.65rem;
+}
+
+.ves-theme .ves-catalog-sidebar a {
+    color: #252b35;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 0.35rem;
+}
+
+.ves-theme .ves-catalog-sidebar a:hover,
+.ves-theme .ves-catalog-sidebar a.ves-current {
+    text-decoration: underline;
+}
+
+.ves-theme .ves-catalog-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.ves-theme .ves-catalog-title {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.05;
+    font-weight: 600;
+    margin: 0;
+}
+
+.ves-theme .ves-catalog-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.ves-theme .ves-catalog-search {
+    position: relative;
+}
+
+.ves-theme .ves-catalog-search input {
+    min-width: 250px;
+    border: 1px solid #c9cbd0;
+    border-radius: 0.3rem;
+    padding: 0.7rem 0.9rem 0.7rem 2.35rem;
+    background: #f7f7f7;
+}
+
+.ves-theme .ves-catalog-search button {
+    position: absolute;
+    left: 0.62rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #515862;
+}
+
+.ves-theme .ves-catalog-sort {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: #363d46;
+}
+
+.ves-theme .ves-catalog-sort select {
+    border: 1px solid #a9afb9;
+    border-radius: 9999px;
+    background: #f5f5f5;
+    padding: 0.35rem 2.15rem 0.35rem 0.95rem;
+}
+
+.ves-theme .ves-catalog-products {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .ves-theme .ves-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .ves-theme .ves-hero-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .ves-theme .ves-catalog-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .ves-theme .ves-catalog-products {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .ves-theme .ves-home-wrap {
+        padding: 1.2rem 1rem 3rem;
+    }
+
+    .ves-theme .ves-hero-copy {
+        padding: 1.4rem 1.1rem;
+    }
+
+    .ves-theme .ves-hero-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ves-theme .ves-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.7rem;
+    }
+
+    .ves-theme .ves-catalog-header {
+        align-items: start;
+        flex-direction: column;
+    }
+
+    .ves-theme .ves-catalog-controls {
+        width: 100%;
+    }
+
+    .ves-theme .ves-catalog-search {
+        width: 100%;
+    }
+
+    .ves-theme .ves-catalog-search input {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .ves-theme .ves-catalog-products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

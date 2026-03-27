@@ -1,0 +1,56 @@
+name: vital
+recipe: laravel
+config:
+  webroot: ./site/public
+  php: '8.4'
+  database: mysql:8.0
+  cache: redis
+
+
+
+services:
+  appserver:
+    build_as_root:
+      - docker-php-ext-install sockets
+      - curl -sL https://deb.nodesource.com/setup_24.x | bash -
+      - apt-get install -y nodejs
+      # Install Playwright/Chromium dependencies for browser testing
+      - apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2 libpango-1.0-0 libcairo2
+    portforward: true
+  mail:
+    type: mailhog
+  phpmyadmin:
+    type: phpmyadmin
+
+
+tooling:
+  composer:
+    service: appserver
+    dir: /app/site
+    cmd: composer
+
+  npm:
+    service: appserver
+    dir: /app/site
+    cmd: npm
+
+  pint:
+    service: appserver
+    dir: /app/site
+    cmd: ./vendor/bin/pint
+
+  test:
+    service: appserver
+    dir: /app/site
+    cmd: php artisan test
+
+
+    
+
+proxy:
+  appserver:
+    - vital.lndo.site
+  phpmyadmin:
+    - phpmyadmin.vital.lndo.site
+  mail:
+    - mail.vital.lndo.site

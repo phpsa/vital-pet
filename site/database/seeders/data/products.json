@@ -1,0 +1,166 @@
+[
+    {
+        "attributes": {
+            "name": "TrailGuard Doggy Boots (Set of 4)",
+            "description": "Water-resistant dog boots with anti-slip soles to protect paws on hot pavement, wet grass, and rocky trails.",
+            "details": [
+                "Breathable mesh upper with reflective strips",
+                "Adjustable hook-and-loop ankle closure",
+                "Rugged outsole for traction on mixed terrain",
+                "Includes 4 boots per pack"
+            ]
+        },
+        "collections": ["dog accessories", "walking gear", "sale"],
+        "sku": "PET-BOOT-100",
+        "price": "4995",
+        "image": "doggy_boots.jpg",
+        "brand": "PawPeak",
+        "options": [
+            {
+                "name": "Size",
+                "shared": true,
+                "values": ["XS", "S", "M", "L"]
+            }
+        ]
+    },
+    {
+        "attributes": {
+            "name": "Reflective Rope Leash 1.8m",
+            "description": "Durable climbing-rope style leash with reflective threading and comfort foam handle for secure evening walks.",
+            "details": [
+                "Length: 1.8 metres",
+                "Padded non-slip handle",
+                "Heavy-duty swivel clip",
+                "Reflective weave for visibility"
+            ]
+        },
+        "collections": ["dog accessories", "walking gear"],
+        "sku": "PET-LEASH-180",
+        "price": "2495",
+        "image": "rope_leash.jpg",
+        "brand": "PawPeak",
+        "options": [
+            {
+                "name": "Colour",
+                "shared": true,
+                "values": ["Black", "Olive", "Orange"]
+            }
+        ]
+    },
+    {
+        "attributes": {
+            "name": "No-Pull Comfort Harness",
+            "description": "Everyday harness with front and back clip points designed for better control and improved walking posture.",
+            "details": [
+                "Front and rear leash attachment points",
+                "Quick-release buckles",
+                "Soft padded chest panel",
+                "Easy size adjustment"
+            ]
+        },
+        "collections": ["dog accessories", "walking gear", "sale"],
+        "sku": "PET-HARN-220",
+        "price": "3995",
+        "image": "dog_harness.jpg",
+        "brand": "StridePaws",
+        "options": [
+            {
+                "name": "Size",
+                "shared": true,
+                "values": ["S", "M", "L", "XL"]
+            }
+        ]
+    },
+    {
+        "attributes": {
+            "name": "Natural Rubber Bone Chew Toy",
+            "description": "Long-lasting chew toy made from natural rubber to support healthy chewing habits and reduce boredom.",
+            "details": [
+                "Textured surface for gum massage",
+                "Treat cavity for enrichment",
+                "Floats in water",
+                "Easy to rinse clean"
+            ]
+        },
+        "collections": ["chew toys", "dog accessories"],
+        "sku": "PET-TOY-310",
+        "price": "1595",
+        "image": "rubber_bone.jpg",
+        "brand": "ChewCraft"
+    },
+    {
+        "attributes": {
+            "name": "Squeaky Plush Fox Toy",
+            "description": "Soft plush toy with built-in squeaker and reinforced seams for indoor fetch and interactive play.",
+            "details": [
+                "Gentle fabric exterior",
+                "Internal squeaker",
+                "Double-stitched edges",
+                "Machine washable"
+            ]
+        },
+        "collections": ["chew toys", "sale"],
+        "sku": "PET-TOY-440",
+        "price": "1295",
+        "image": "plush_fox_toy.jpg",
+        "brand": "ChewCraft"
+    },
+    {
+        "attributes": {
+            "name": "Training Treat Bites - Chicken",
+            "description": "Soft, bite-size training treats made with chicken, ideal for quick rewards during obedience and agility sessions.",
+            "details": [
+                "Low-calorie mini bites",
+                "Made with real chicken",
+                "Resealable pouch",
+                "Suitable for all life stages"
+            ]
+        },
+        "collections": ["dog treats", "sale"],
+        "sku": "PET-TRT-510",
+        "price": "995",
+        "image": "chicken_treats.jpg",
+        "brand": "DailyPaws"
+    },
+    {
+        "attributes": {
+            "name": "Salmon Crunch Dental Sticks",
+            "description": "Crunchy salmon dental sticks formulated to help reduce plaque build-up and freshen breath.",
+            "details": [
+                "Omega-rich salmon recipe",
+                "Ridged texture helps clean teeth",
+                "No artificial colours",
+                "Great for daily dental support"
+            ]
+        },
+        "collections": ["dog treats"],
+        "sku": "PET-TRT-610",
+        "price": "1495",
+        "image": "salmon_sticks.jpg",
+        "brand": "DailyPaws",
+        "options": [
+            {
+                "name": "Pack Size",
+                "shared": true,
+                "values": ["120g", "250g"]
+            }
+        ]
+    },
+    {
+        "attributes": {
+            "name": "Peanut Butter Filled Chew Rings",
+            "description": "Protein-forward chew rings with peanut butter filling for a satisfying long-lasting reward.",
+            "details": [
+                "Chew-friendly ring shape",
+                "High palatability for picky dogs",
+                "Use as crate-time enrichment",
+                "Best for supervised chewing"
+            ]
+        },
+        "collections": ["dog treats", "chew toys"],
+        "sku": "PET-TRT-720",
+        "price": "1895",
+        "image": "chew_rings.jpg",
+        "brand": "GoodDog Pantry"
+    }
+]
