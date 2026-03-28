@@ -1,0 +1,25 @@
+{
+  "name": "vital/airwallex-payments",
+  "type": "library",
+  "description": "Reusable Airwallex payment driver for Lunar.",
+  "license": "MIT",
+  "require": {
+    "php": "^8.2",
+    "lunarphp/core": "*",
+    "livewire/livewire": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Vital\\Airwallex\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Vital\\Airwallex\\AirwallexPaymentsServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

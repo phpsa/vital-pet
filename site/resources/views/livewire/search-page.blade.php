@@ -1,5 +1,14 @@
 <section>
     <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
+        @php
+            $breadcrumbItems = [
+                ['label' => 'Home', 'url' => url('/')],
+                ['label' => 'Search', 'url' => null],
+            ];
+        @endphp
+
+        <x-breadcrumbs :items="$breadcrumbItems" />
+
         <h1 class="text-3xl font-bold">
             Search Results
             @if (isset($term))

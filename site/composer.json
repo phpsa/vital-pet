@@ -21,7 +21,7 @@
         "lunarphp/lunar": "^1.3",
         "lunarphp/stripe": "^1.3",
         "lunarphp/table-rate-shipping": "^1.3",
-        "meilisearch/meilisearch-php": "^1.6",
+        "vital/airwallex-payments": "*",
         "predis/predis": "^2.2"
     },
     "require-dev": {
@@ -63,6 +63,12 @@
             "dont-discover": []
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/airwallex-payments"
+        }
+    ],
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",

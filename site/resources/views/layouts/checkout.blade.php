@@ -25,7 +25,7 @@
         href="{{ asset('favicon.svg') }}"
     >
     @livewireStyles
-    @stripeScripts
+    @airwallexScripts
 </head>
 
 <body class="ves-theme antialiased">

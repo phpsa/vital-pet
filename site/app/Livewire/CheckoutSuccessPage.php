@@ -12,10 +12,33 @@ class CheckoutSuccessPage extends Component
 {
     public ?Cart $cart;
 
+    public ?int $order_id = null;
+
     public Order $order;
+
+    protected $queryString = [
+        'order_id',
+    ];
 
     public function mount(): void
     {
+        if ($this->order_id) {
+            if (! request()->hasValidSignature()) {
+                abort(403);
+            }
+
+            $order = Order::query()->find($this->order_id);
+
+            if ($order) {
+                $this->order = $order;
+                CartSession::forget();
+
+                return;
+            }
+
+            abort(404);
+        }
+
         $this->cart = CartSession::current();
         if (! $this->cart || ! $this->cart->completedOrder) {
             $this->redirect('/');

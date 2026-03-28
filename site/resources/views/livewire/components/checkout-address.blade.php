@@ -2,14 +2,6 @@
       class="border rounded shadow-lg">
     <div class="flex justify-between p-4 font-medium border-b">
         <span class="text-xl">{{ ucfirst($type) }} Details</span>
-        @if ($type == 'shipping' && $editing)
-            <label class="text-sm">
-                <input type="checkbox"
-                       value="1"
-                       wire:model.live="shippingIsBilling" />
-                Same as billing
-            </label>
-        @endif
     </div>
     <div class="p-4 space-y-4">
         @if ($editing)

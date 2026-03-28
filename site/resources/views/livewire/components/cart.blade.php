@@ -1,7 +1,8 @@
 <div class="sm:relative"
      x-data="{
          linesVisible: @entangle('linesVisible').live
-     }">
+    }"
+    x-on:add-to-cart.window="window.scrollTo({ top: 0, behavior: 'smooth' })">
     <button class="grid w-16 h-16 transition border-l border-gray-100 lg:border-l-transparent hover:opacity-75 ves-icon-button"
             x-on:click="linesVisible = !linesVisible">
         <span class="sr-only">Cart</span>

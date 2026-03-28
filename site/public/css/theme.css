@@ -222,6 +222,45 @@ body.ves-theme {
     font-weight: 600;
 }
 
+.ves-theme .ves-breadcrumbs {
+    margin-bottom: 1rem;
+}
+
+.ves-theme .ves-breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+}
+
+.ves-theme .ves-breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #66707a;
+}
+
+.ves-theme .ves-breadcrumbs li + li::before {
+    content: '/';
+    margin-right: 0.45rem;
+    color: #98a0a8;
+}
+
+.ves-theme .ves-breadcrumbs a {
+    color: #4f5965;
+}
+
+.ves-theme .ves-breadcrumbs a:hover {
+    color: var(--ves-text);
+}
+
+.ves-theme .ves-breadcrumbs [aria-current='page'] {
+    color: var(--ves-text);
+    font-weight: 600;
+}
+
 .ves-theme .ves-product-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -255,6 +294,19 @@ body.ves-theme {
     color: #2b2f37;
     font-size: 1rem;
     font-weight: 600;
+}
+
+.ves-theme .ves-price-compare {
+    color: #dc2626;
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+
+.ves-theme .ves-price-current {
+    color: #15803d;
+    font-weight: 700;
 }
 
 .ves-theme .ves-sale-panel {
@@ -291,6 +343,10 @@ body.ves-theme {
     display: grid;
     grid-template-columns: 220px 1fr;
     gap: 2rem;
+}
+
+.ves-theme .ves-catalog-grid.ves-no-sidebar {
+    grid-template-columns: 1fr;
 }
 
 .ves-theme .ves-catalog-sidebar h2 {
@@ -375,7 +431,7 @@ body.ves-theme {
 
 .ves-theme .ves-catalog-products {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1rem;
 }
 

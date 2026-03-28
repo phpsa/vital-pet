@@ -1,10 +1,13 @@
-<section class="bg-white">
-    <div class="max-w-screen-xl px-4 py-32 mx-auto sm:px-6 lg:px-8 lg:py-48">
-        <div class="max-w-xl mx-auto text-center">
-            <span class="text-xs font-medium text-center bg-orange-100 text-orange-700 px-3 py-1.5 rounded-lg">
-                This was a test order
-            </span>
+<section class="bg-white"
+         style="padding-bottom: 6rem;">
+    <div class="max-w-screen-xl px-4 pt-8 pb-20 mx-auto sm:px-6 sm:pt-10 lg:px-8 lg:pt-12 lg:pb-24">
+        <x-breadcrumbs :items="[
+            ['label' => 'Home', 'url' => url('/')],
+            ['label' => 'Checkout', 'url' => route('checkout.view')],
+            ['label' => 'Order Complete', 'url' => null],
+        ]" />
 
+        <div class="max-w-xl mx-auto pb-12 text-center sm:pb-16 lg:pb-20">
             <h1 class="mt-8 text-3xl font-extrabold sm:text-5xl">
                 <span class="block"
                       role="img">

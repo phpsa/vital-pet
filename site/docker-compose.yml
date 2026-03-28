@@ -26,7 +26,6 @@ services:
         - ./:/var/www/
     depends_on:
         - mysql
-        - meilisearch
 
   php-fpm:
     container_name: demostore-php-fpm
@@ -42,30 +41,6 @@ services:
       - ./:/var/www/:rw,cached
     depends_on:
       - mysql
-      - meilisearch
-
-  meilisearch:
-    container_name: demostore-meilisearch
-    image: getmeili/meilisearch:latest
-    restart: unless-stopped
-    environment:
-        - MEILI_MASTER_KEY=${MEILISEARCH_KEY}
-        - MEILI_LOG_LEVEL=ERROR
-    volumes:
-        - meilisearch:/meili_data
-    ports:
-        - "${MEILISEARCH_PORT}:${MEILISEARCH_PORT}"
-    depends_on:
-        - mysql
-
-  meilisearch-ui:
-      container_name: demostore-meilisearch-ui
-      image: riccoxie/meilisearch-ui:latest
-      restart: unless-stopped
-      ports:
-          - ${MEILISEARCH_UI_PORT}:24900
-      depends_on:
-          - meilisearch
 
   redis:
     container_name: demostore-redis
@@ -83,4 +58,3 @@ services:
 
 volumes:
   storage:
-  meilisearch:

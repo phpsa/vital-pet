@@ -1,7 +1,12 @@
-@props(['product'])
+@props([
+    'product',
+    'collectionSlug' => null,
+])
 
 <a class="block group ves-product-card"
-   href="{{ route('product.view', $product->defaultUrl->slug) }}"
+   href="{{ $collectionSlug
+       ? route('product.view', ['slug' => $product->defaultUrl->slug, 'fromCollection' => $collectionSlug])
+       : route('product.view', $product->defaultUrl->slug) }}"
    wire:navigate
 >
     <div class="overflow-hidden aspect-w-1 aspect-h-1">

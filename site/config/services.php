@@ -36,4 +36,9 @@ return [
         'key' => env('STRIPE_SECRET'),
     ],
 
+    'airwallex' => [
+        'client_id' => env('AIRWALLEX_CLIENT_ID'),
+        'api_key' => env('AIRWALLEX_API_KEY'),
+    ],
+
 ];

@@ -14,6 +14,12 @@ class ProductPage extends Component
 {
     use FetchesUrls;
 
+    protected $queryString = [
+        'fromCollection',
+    ];
+
+    public ?string $fromCollection = null;
+
     /**
      * The selected option values.
      */
@@ -26,6 +32,7 @@ class ProductPage extends Component
             (new Product)->getMorphClass(),
             [
                 'element.media',
+                'element.collections.defaultUrl',
                 'element.variants.basePrices.currency',
                 'element.variants.basePrices.priceable',
                 'element.variants.values.option',

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 use Livewire\Component;
 use Lunar\Facades\CartSession;
@@ -57,7 +58,7 @@ class CheckoutPage extends Component
     /**
      * The payment type we want to use.
      */
-    public string $paymentType = 'cash-in-hand';
+    public string $paymentType = 'airwallex';
 
     /**
      * {@inheritDoc}
@@ -69,11 +70,8 @@ class CheckoutPage extends Component
 
     public $payment_intent = null;
 
-    public $payment_intent_client_secret = null;
-
     protected $queryString = [
         'payment_intent',
-        'payment_intent_client_secret',
     ];
 
     /**
@@ -85,7 +83,6 @@ class CheckoutPage extends Component
             $this->getAddressValidation('shipping'),
             $this->getAddressValidation('billing'),
             [
-                'shippingIsBilling' => 'boolean',
                 'chosenShipping' => 'required',
             ]
         );
@@ -93,6 +90,9 @@ class CheckoutPage extends Component
 
     public function mount(): void
     {
+        $this->shippingIsBilling = true;
+        $this->paymentType = 'airwallex';
+
         if (! $this->cart = CartSession::current()) {
             $this->redirect('/');
 
@@ -101,15 +101,26 @@ class CheckoutPage extends Component
 
         if ($this->payment_intent) {
             $payment = Payments::driver($this->paymentType)->cart($this->cart)->withData([
-                'payment_intent_client_secret' => $this->payment_intent_client_secret,
                 'payment_intent' => $this->payment_intent,
             ])->authorize();
 
             if ($payment->success) {
-                redirect()->route('checkout-success.view');
+                $orderId = $payment->orderId ?: $this->cart->completedOrder?->id;
+
+                if (! $orderId) {
+                    $this->redirectRoute('checkout.view');
+
+                    return;
+                }
+
+                $this->redirect($this->signedSuccessUrl((int) $orderId));
 
                 return;
             }
+
+            $this->redirectRoute('checkout.view');
+
+            return;
         }
 
         // Do we have a shipping address?
@@ -117,11 +128,23 @@ class CheckoutPage extends Component
 
         $this->billing = $this->cart->billingAddress ?: new CartAddress;
 
+        if ($defaultCountry = Country::firstWhere('iso3', 'AUS')) {
+            if (! $this->shipping->country_id) {
+                $this->shipping->country_id = $defaultCountry->id;
+            }
+
+            if (! $this->billing->country_id) {
+                $this->billing->country_id = $defaultCountry->id;
+            }
+        }
+
         $this->determineCheckoutStep();
     }
 
     public function hydrate(): void
     {
+        $this->shippingIsBilling = true;
+        $this->paymentType = 'airwallex';
         $this->cart = CartSession::current();
     }
 
@@ -152,9 +175,21 @@ class CheckoutPage extends Component
                 $this->currentStep = $this->steps['shipping_option'] + 1;
             } else {
                 $this->currentStep = $this->steps['shipping_option'];
-                $this->chosenShipping = $this->shippingOptions->first()?->getIdentifier();
+                $firstOption = $this->shippingOptions->first();
+                $this->chosenShipping = $firstOption?->getIdentifier();
+                $autoSelectedSingleOption = false;
 
-                return;
+                // Keep totals stable when there is only one shipping choice.
+                if ($firstOption && $this->shippingOptions->count() === 1) {
+                    CartSession::setShippingOption($firstOption);
+                    $this->refreshCart();
+                    $this->currentStep = $this->steps['shipping_option'] + 1;
+                    $autoSelectedSingleOption = true;
+                }
+
+                if (! $autoSelectedSingleOption) {
+                    return;
+                }
             }
         }
 
@@ -168,7 +203,7 @@ class CheckoutPage extends Component
      */
     public function refreshCart(): void
     {
-        $this->cart = CartSession::current();
+        $this->cart = $this->cart?->refresh()?->recalculate() ?: CartSession::current(calculate: true);
     }
 
     /**
@@ -208,24 +243,32 @@ class CheckoutPage extends Component
         }
 
         if ($type == 'shipping') {
+            $previousCountryId = $this->cart->shippingAddress?->country_id;
+
             $this->cart->setShippingAddress($address);
             $this->shipping = $this->cart->shippingAddress;
 
-            if ($this->shippingIsBilling) {
-                // Do we already have a billing address?
-                if ($billing = $this->cart->billingAddress) {
-                    $billing->fill($validatedData['shipping']);
-                    $this->cart->setBillingAddress($billing);
-                } else {
-                    $address = $address->only(
-                        $address->getFillable()
-                    );
-                    $this->cart->setBillingAddress($address);
-                }
+            // Billing always mirrors shipping.
+            if ($billing = $this->cart->billingAddress) {
+                $billing->fill($validatedData['shipping']);
+                $this->cart->setBillingAddress($billing);
+            } else {
+                $address = $address->only(
+                    $address->getFillable()
+                );
+                $this->cart->setBillingAddress($address);
+            }
 
-                $this->billing = $this->cart->billingAddress;
+            $this->billing = $this->cart->billingAddress;
+
+            if ($previousCountryId !== $this->shipping?->country_id) {
+                $this->shipping->shipping_option = null;
+                $this->shipping->save();
+                $this->chosenShipping = null;
             }
         }
+
+        $this->refreshCart();
 
         $this->determineCheckoutStep();
     }
@@ -247,17 +290,20 @@ class CheckoutPage extends Component
     public function checkout()
     {
         $payment = Payments::cart($this->cart)->withData([
-            'payment_intent_client_secret' => $this->payment_intent_client_secret,
             'payment_intent' => $this->payment_intent,
         ])->authorize();
 
         if ($payment->success) {
-            redirect()->route('checkout-success.view');
+            $orderId = $payment->orderId ?: $this->cart->completedOrder?->id;
 
-            return;
+            if (! $orderId) {
+                return $this->redirectRoute('checkout.view');
+            }
+
+            return $this->redirect($this->signedSuccessUrl((int) $orderId));
         }
 
-        return redirect()->route('checkout-success.view');
+        return $this->redirectRoute('checkout.view');
     }
 
     /**
@@ -265,7 +311,7 @@ class CheckoutPage extends Component
      */
     public function getCountriesProperty(): Collection
     {
-        return Country::whereIn('iso3', ['GBR', 'USA'])->get();
+        return Country::whereIn('iso3', ['AUS', 'NZL'])->get();
     }
 
     /**
@@ -273,9 +319,19 @@ class CheckoutPage extends Component
      */
     public function getShippingOptionsProperty(): Collection
     {
-        return ShippingManifest::getOptions(
+        $options = ShippingManifest::getOptions(
             $this->cart
         );
+
+        $shippingCountryIso3 = $this->shipping?->country?->iso3 ?: $this->cart?->shippingAddress?->country?->iso3;
+
+        if (! $shippingCountryIso3) {
+            return $options;
+        }
+
+        return $options->filter(function ($option) use ($shippingCountryIso3) {
+            return strtoupper((string) $option->getIdentifier()) === strtoupper((string) $shippingCountryIso3);
+        })->values();
     }
 
     /**
@@ -298,6 +354,15 @@ class CheckoutPage extends Component
             "{$type}.contact_email" => 'required|email',
             "{$type}.contact_phone" => 'nullable',
         ];
+    }
+
+    protected function signedSuccessUrl(int $orderId): string
+    {
+        return URL::temporarySignedRoute(
+            'checkout-success.view',
+            now()->addMinutes(60),
+            ['order_id' => $orderId]
+        );
     }
 
     public function render(): View

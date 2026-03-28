@@ -12,6 +12,12 @@ class CollectionPage extends Component
 {
     use FetchesUrls;
 
+    protected $queryString = [
+        'sort' => ['except' => 'default'],
+    ];
+
+    public string $sort = 'default';
+
     public function mount(string $slug): void
     {
         $this->url = $this->fetchUrl(
@@ -35,6 +41,31 @@ class CollectionPage extends Component
     public function getCollectionProperty(): mixed
     {
         return $this->url->element;
+    }
+
+    /**
+     * Computed property to return sorted products.
+     */
+    public function getProductsProperty(): Collection
+    {
+        $products = $this->collection->products;
+
+        return match ($this->sort) {
+            'price_low' => $products->sortBy(fn ($product) => $this->getSortablePrice($product))->values(),
+            'price_high' => $products->sortByDesc(fn ($product) => $this->getSortablePrice($product))->values(),
+            'name' => $products->sortBy(fn ($product) => (string) $product->translateAttribute('name'))->values(),
+            default => $products,
+        };
+    }
+
+    protected function getSortablePrice($product): int
+    {
+        $prices = $product->variants
+            ->flatMap(fn ($variant) => $variant->basePrices)
+            ->map(fn ($basePrice) => $basePrice->price?->value)
+            ->filter(fn ($price) => is_numeric($price));
+
+        return $prices->isNotEmpty() ? (int) $prices->min() : \PHP_INT_MAX;
     }
 
     public function render(): View

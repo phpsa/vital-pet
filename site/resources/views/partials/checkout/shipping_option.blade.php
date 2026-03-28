@@ -49,7 +49,7 @@
             @elseif($currentStep > $step && $this->shippingOption)
                 <dl class="flex flex-wrap max-w-xs text-sm">
                     <dt class="w-1/2 font-medium">
-                        {{ $this->shippingOption->getDescription() }}
+                        {{ $this->shippingOption->getName() ?: $this->shippingOption->getDescription() }}
                     </dt>
 
                     <dd class="w-1/2 text-right">
