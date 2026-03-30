@@ -25,6 +25,28 @@
         <div class="flex items-center justify-between flex-1 ml-4 lg:justify-end">
             <x-header.search class="max-w-sm mr-4" />
 
+            <div class="hidden items-center gap-3 lg:flex lg:mr-4">
+                @auth
+                    <span class="text-xs tracking-[0.12em] uppercase text-gray-300">
+                        {{ auth()->user()->email }}
+                    </span>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+
+                        <button class="text-sm font-medium transition hover:opacity-75 ves-nav-link"
+                                type="submit">
+                            Logout
+                        </button>
+                    </form>
+                @else
+                    <a class="text-sm font-medium transition hover:opacity-75 ves-nav-link"
+                       href="{{ route('login') }}">
+                        Login
+                    </a>
+                @endauth
+            </div>
+
             <div class="flex items-center -mr-4 sm:-mr-6 lg:mr-0">
                 @livewire('components.cart')
 
@@ -63,6 +85,28 @@
                                     </a>
                                 </li>
                             @endforeach
+
+                            @auth
+                                <li class="border-t border-gray-100 pt-4 text-xs uppercase tracking-[0.16em] text-gray-500">
+                                    {{ auth()->user()->email }}
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button class="text-sm font-medium ves-nav-link"
+                                                type="submit">
+                                            Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            @else
+                                <li class="border-t border-gray-100 pt-4">
+                                    <a class="text-sm font-medium ves-nav-link"
+                                       href="{{ route('login') }}">
+                                        Login
+                                    </a>
+                                </li>
+                            @endauth
                         </ul>
                     </div>
                 </div>
