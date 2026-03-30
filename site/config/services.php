@@ -51,4 +51,8 @@ return [
         'landing_url' => env('SENDING_LANDING_URL'),
     ],
 
+    'store' => [
+        'admin_email' => env('STORE_ADMIN_EMAIL', env('MAIL_FROM_ADDRESS')),
+    ],
+
 ];

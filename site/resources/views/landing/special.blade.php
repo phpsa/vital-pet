@@ -73,14 +73,10 @@
             <div class="spinner"></div>
             <div class="stack">
                 <h1>Redirecting to payment gateway</h1>
-                <p>Your payment request is being prepared with Airwallex and you will be redirected automatically.</p>
+                <p>Your payment request is being prepared with our payment provider and you will be redirected automatically.</p>
             </div>
 
-            <div class="meta">
-                <div>Request ID: <code>{{ $landingRequest->request_id }}</code></div>
-                <div>Original Return URL: <code>{{ $landingRequest->return_url }}</code></div>
-                <div>Gateway Return URL: <code>{{ $landingRequest->gateway_return_url }}</code></div>
-            </div>
+           
             <script src="{{ $airwallexJsUrl }}"></script>
             <script>
                 window.addEventListener('load', async function () {
@@ -137,38 +133,12 @@
             </script>
 
         @elseif (($mode ?? '') === 'error')
-            <h1>Unable to start payment</h1>
-            <p>The landing page could not create the Airwallex payment intent.</p>
+            <h1>Payment Error</h1>
+            <p>We encountered a problem starting your payment. Please try again or contact support if the issue persists.</p>
 
-            <div class="meta">
-                <div>Request ID: <code>{{ $landingRequest->request_id }}</code></div>
-                <div>Status: <code>{{ $landingRequest->status }}</code></div>
-            </div>
-
-            <div class="stack">
-                <h3>Error</h3>
-                <pre>{{ $errorMessage }}</pre>
-            </div>
         @else
-            <h1>Returned from payment gateway</h1>
-            <p>The shopper has been redirected back to this landing endpoint for follow-up handling.</p>
-
-            <div class="meta">
-                <div>Request ID: <code>{{ $landingRequest->request_id }}</code></div>
-                <div>Status: <code>{{ $landingRequest->status }}</code></div>
-                <div>Original Return URL: <code>{{ $landingRequest->return_url }}</code></div>
-            </div>
-
-            <div class="stack">
-                <h3>Original Payload</h3>
-                <pre>{{ json_encode($landingRequest->payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
-
-                <h3>Gateway Payload</h3>
-                <pre>{{ json_encode($landingRequest->gateway_payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
-
-                <h3>Meta</h3>
-                <pre>{{ json_encode($landingRequest->meta, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
-            </div>
+            <h1>Payment Processing</h1>
+            <p>Your payment is being processed. You will be redirected shortly.</p>
         @endif
     </main>
 </body>

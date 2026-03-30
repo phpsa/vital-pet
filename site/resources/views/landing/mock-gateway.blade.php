@@ -14,19 +14,16 @@
 </head>
 <body>
     <main class="panel">
-        <h1>Mock Payment Gateway</h1>
-        <p>This route exists so the landing flow can be tested locally in one codebase.</p>
-
-        <pre>{{ json_encode($postedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
+        <h1>Payment Processing</h1>
+        <p>Your payment is being processed. Please review and complete your payment below.</p>
 
         <div class="actions">
             <form method="POST">
                 @csrf
                 <input type="hidden" name="action" value="cancel">
-                @foreach ($postedData as $key => $value)
-                    <input type="hidden" name="{{ $key }}" value="{{ is_scalar($value) ? $value : json_encode($value, JSON_UNESCAPED_SLASHES) }}">
-                @endforeach
-                <button type="submit">Cancel and return</button>
+                <input type="hidden" name="return_url" value="{{ $postedData['return_url'] ?? '' }}">
+                <input type="hidden" name="request_id" value="{{ $postedData['request_id'] ?? '' }}">
+                <button type="submit">Cancel Payment</button>
             </form>
         </div>
     </main>
