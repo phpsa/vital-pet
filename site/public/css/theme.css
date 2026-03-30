@@ -209,6 +209,81 @@ body.ves-theme {
     font-weight: 600;
 }
 
+.ves-theme .member-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 27rem;
+    margin-bottom: 2.25rem;
+    background-image: linear-gradient(90deg, rgba(21, 25, 31, 0.48) 0%, rgba(47, 52, 59, 0.18) 55%, rgba(62, 67, 74, 0.28) 100%), var(--member-hero-bg);
+    background-size: cover;
+    background-position: center;
+}
+
+.ves-theme .member-hero-content {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    min-height: 27rem;
+    max-width: 86rem;
+    margin: 0 auto;
+    padding: 2.5rem clamp(1.25rem, 5vw, 5.5rem) 3rem;
+}
+
+.ves-theme .member-hero-copy {
+    width: min(100%, 35rem);
+    justify-self: start;
+    margin-top: 1.8rem;
+    color: #ffffff;
+}
+
+.ves-theme .member-hero-title {
+    margin: 0;
+    font-size: clamp(3rem, 7.2vw, 6rem);
+    line-height: 0.94;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+}
+
+.ves-theme .member-hero-text {
+    margin: 1rem 0 0;
+    max-width: 22rem;
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.96);
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+.ves-theme .member-hero-rule {
+    width: min(100%, 18.75rem);
+    height: 4px;
+    background: rgba(255, 255, 255, 0.92);
+    justify-self: center;
+}
+
+.ves-theme .member-hero-rule-bottom {
+    margin-top: 1rem;
+}
+
+.ves-theme .member-hero-button {
+    margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 12.25rem;
+    padding: 0.95rem 1.8rem;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #22262b;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.ves-theme .member-hero-button:hover {
+    background: #f4f4f4;
+}
+
 .ves-theme .ves-section-title {
     display: flex;
     align-items: center;
@@ -492,5 +567,27 @@ body.ves-theme {
 
     .ves-theme .ves-catalog-products {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ves-theme .member-hero {
+        min-height: 23rem;
+    }
+
+    .ves-theme .member-hero-content {
+        min-height: 23rem;
+        padding: 2rem 1.25rem 2.25rem;
+    }
+
+    .ves-theme .member-hero-copy {
+        width: 100%;
+        margin-top: 1.25rem;
+    }
+
+    .ves-theme .member-hero-title {
+        font-size: clamp(2.65rem, 13vw, 4rem);
+    }
+
+    .ves-theme .member-hero-text {
+        max-width: 17rem;
     }
 }

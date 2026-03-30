@@ -11,6 +11,9 @@ return [
     | an array of paths that should be checked for your views. Of course
     | the usual Laravel view path has already been registered for you.
     |
+    | Template view loading is configured in config/template.php and
+    | registered dynamically in AppServiceProvider.
+    |
     */
 
     'paths' => [

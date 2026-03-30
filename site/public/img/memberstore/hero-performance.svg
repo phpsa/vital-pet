@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760" role="img" aria-labelledby="title desc">
+  <title id="title">Scientific glassware hero background</title>
+  <desc id="desc">Monochrome laboratory glassware background for the memberstore welcome banner.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#646b73"/>
+      <stop offset="50%" stop-color="#8d949b"/>
+      <stop offset="100%" stop-color="#b2b7bc"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4f7fa" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#d0d5db" stop-opacity="0.12"/>
+    </linearGradient>
+    <filter id="blur" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="760" fill="url(#bg)"/>
+  <rect width="1600" height="760" fill="#2c3138" opacity="0.24"/>
+
+  <g opacity="0.95" stroke="#eef2f5" stroke-opacity="0.38" fill="url(#glass)">
+    <path d="M480 115L598 115L560 286L560 620Q560 665 515 665L563 665Q518 665 518 620L518 286Z" stroke-width="8"/>
+    <path d="M815 72L950 72L912 220L912 630Q912 676 864 676L901 676Q853 676 853 630L853 220Z" stroke-width="7"/>
+    <path d="M1166 126Q1130 126 1116 155Q1102 185 1102 228L1102 620Q1102 676 1154 676L1270 676Q1325 676 1325 620L1325 228Q1325 182 1308 154Q1290 126 1256 126Z" stroke-width="8"/>
+    <path d="M230 188L388 188L360 260L360 625Q360 672 315 672L306 672Q258 672 258 625L258 260Z" stroke-width="7"/>
+  </g>
+
+  <g stroke="#ffffff" stroke-opacity="0.18" fill="none">
+    <path d="M0 650Q250 580 520 615T1050 590T1600 635" stroke-width="14" filter="url(#blur)"/>
+    <path d="M0 130Q420 100 760 146T1600 118" stroke-width="11" filter="url(#blur)"/>
+  </g>
+
+  <g opacity="0.26" stroke="#ffffff" stroke-width="5" stroke-linecap="round">
+    <path d="M526 292L548 292"/>
+    <path d="M526 347L548 347"/>
+    <path d="M526 402L548 402"/>
+    <path d="M861 260L902 260"/>
+    <path d="M861 322L902 322"/>
+    <path d="M861 384L902 384"/>
+    <path d="M1148 260L1290 260"/>
+    <path d="M1148 326L1290 326"/>
+    <path d="M1148 392L1290 392"/>
+  </g>
+</svg>

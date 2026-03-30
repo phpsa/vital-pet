@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Precision formulas illustration</title>
+  <desc id="desc">Abstract scientific cards and molecular markers representing peptide formulas.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef7fb"/>
+      <stop offset="100%" stop-color="#d2e9f6"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f2fbff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect x="160" y="150" width="390" height="520" rx="34" fill="url(#card)" stroke="#9bc9df" stroke-width="6"/>
+  <rect x="450" y="250" width="520" height="420" rx="34" fill="url(#card)" stroke="#9bc9df" stroke-width="6"/>
+  <circle cx="950" cy="170" r="120" fill="#d8eef8"/>
+  <g stroke="#1d5d8f" stroke-linecap="round">
+    <path d="M245 245H460" stroke-width="18"/>
+    <path d="M245 305H400" stroke-width="18"/>
+    <path d="M245 365H430" stroke-width="18"/>
+    <path d="M245 425H360" stroke-width="18"/>
+    <path d="M520 345H865" stroke-width="18"/>
+    <path d="M520 405H815" stroke-width="18"/>
+    <path d="M520 465H785" stroke-width="18"/>
+  </g>
+  <g fill="#49b6d6">
+    <circle cx="905" cy="350" r="26"/>
+    <circle cx="1010" cy="420" r="20"/>
+    <circle cx="930" cy="520" r="22"/>
+  </g>
+  <path d="M905 350L1010 420L930 520" fill="none" stroke="#49b6d6" stroke-width="10" stroke-linecap="round"/>
+</svg>

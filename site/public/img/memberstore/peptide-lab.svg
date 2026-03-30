@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Peptide lab illustration</title>
+  <desc id="desc">Abstract peptide research scene with molecule nodes and lab gradients.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e9f6ff"/>
+      <stop offset="100%" stop-color="#b8d8f3"/>
+    </linearGradient>
+    <linearGradient id="orb" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d5d8f"/>
+      <stop offset="100%" stop-color="#49b6d6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <circle cx="950" cy="170" r="180" fill="#d9eefc"/>
+  <circle cx="260" cy="720" r="220" fill="#c6e7fb"/>
+  <path d="M180 660C280 500 390 430 520 420C680 408 770 510 870 520C987 532 1042 444 1115 338" fill="none" stroke="#1d5d8f" stroke-width="18" stroke-linecap="round"/>
+  <path d="M170 620C285 460 405 395 548 394C699 393 805 486 894 491C986 496 1066 437 1122 353" fill="none" stroke="#7fd0e6" stroke-width="8" stroke-linecap="round" stroke-dasharray="2 26"/>
+  <g fill="url(#orb)">
+    <circle cx="180" cy="660" r="28"/>
+    <circle cx="345" cy="500" r="24"/>
+    <circle cx="520" cy="420" r="28"/>
+    <circle cx="710" cy="468" r="24"/>
+    <circle cx="870" cy="520" r="30"/>
+    <circle cx="1115" cy="338" r="26"/>
+  </g>
+  <rect x="120" y="120" width="270" height="170" rx="24" fill="#ffffff" opacity="0.72"/>
+  <path d="M185 235H320" stroke="#1d5d8f" stroke-width="18" stroke-linecap="round"/>
+  <path d="M185 190H340" stroke="#49b6d6" stroke-width="18" stroke-linecap="round"/>
+  <path d="M185 145H285" stroke="#7fd0e6" stroke-width="18" stroke-linecap="round"/>
+</svg>

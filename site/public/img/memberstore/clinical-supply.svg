@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Clinical supply illustration</title>
+  <desc id="desc">Abstract logistics and assay diagram representing clinical peptide supply.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eff8ff"/>
+      <stop offset="100%" stop-color="#d4ecf8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <circle cx="920" cy="200" r="140" fill="#d9eef9"/>
+  <rect x="190" y="350" width="310" height="220" rx="28" fill="#ffffff" stroke="#7fb3c9" stroke-width="8"/>
+  <rect x="470" y="280" width="260" height="290" rx="28" fill="#ffffff" stroke="#7fb3c9" stroke-width="8"/>
+  <rect x="720" y="390" width="290" height="180" rx="28" fill="#ffffff" stroke="#7fb3c9" stroke-width="8"/>
+  <path d="M500 460H470" stroke="#1d5d8f" stroke-width="12" stroke-linecap="round"/>
+  <path d="M730 460H720" stroke="#1d5d8f" stroke-width="12" stroke-linecap="round"/>
+  <path d="M500 460C560 380 650 380 730 460" fill="none" stroke="#49b6d6" stroke-width="12" stroke-linecap="round" stroke-dasharray="2 24"/>
+  <g fill="#49b6d6">
+    <circle cx="345" cy="460" r="34"/>
+    <circle cx="600" cy="425" r="34"/>
+    <circle cx="865" cy="460" r="34"/>
+  </g>
+  <g stroke="#1d5d8f" stroke-linecap="round" stroke-width="16">
+    <path d="M255 430H435"/>
+    <path d="M255 490H405"/>
+    <path d="M535 380H665"/>
+    <path d="M535 440H665"/>
+    <path d="M785 430H945"/>
+    <path d="M785 490H915"/>
+  </g>
+</svg>
