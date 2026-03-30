@@ -18,6 +18,12 @@
           action="{{ route('password.email') }}">
         @csrf
 
+                @if (! empty($redirectTo))
+                        <input name="redirect_to"
+                                     type="hidden"
+                                     value="{{ $redirectTo }}">
+                @endif
+
         <label class="ves-auth-field">
             <span>Email address</span>
             <input name="email"
@@ -38,7 +44,7 @@
     </form>
 
     <a class="ves-link ves-auth-secondary-link"
-       href="{{ route('login') }}">
+       href="{{ route('login', ! empty($redirectTo) ? ['redirect_to' => $redirectTo] : []) }}">
         Back to sign in
     </a>
 </x-layouts.auth>

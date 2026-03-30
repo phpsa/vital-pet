@@ -10,13 +10,21 @@ use Illuminate\View\View;
 
 class PasswordResetLinkController extends Controller
 {
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('auth.forgot-password');
+        return view('auth.forgot-password', [
+            'redirectTo' => $request->query('redirect_to'),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
+        $redirectTo = $this->resolveRedirectKey($request);
+
+        if ($redirectTo) {
+            $request->session()->put('auth.redirect_to', $redirectTo);
+        }
+
         $request->validate([
             'email' => ['required', 'email'],
         ]);
@@ -30,7 +38,17 @@ class PasswordResetLinkController extends Controller
         }
 
         return back()
-            ->withInput($request->only('email'))
+            ->withInput($request->only('email', 'redirect_to'))
             ->withErrors(['email' => __($status)]);
+    }
+
+    private function resolveRedirectKey(Request $request): ?string
+    {
+        $redirectTo = (string) $request->input('redirect_to', $request->query('redirect_to', ''));
+
+        return match ($redirectTo) {
+            'checkout' => 'checkout',
+            default => null,
+        };
     }
 }

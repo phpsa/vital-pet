@@ -16,6 +16,12 @@
                type="hidden"
                value="{{ $request->route('token') }}">
 
+         @if (! empty($redirectTo))
+             <input name="redirect_to"
+                 type="hidden"
+                 value="{{ $redirectTo }}">
+         @endif
+
         <label class="ves-auth-field">
             <span>Email address</span>
             <input name="email"

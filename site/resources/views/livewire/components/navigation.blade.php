@@ -27,18 +27,52 @@
 
             <div class="hidden items-center gap-3 lg:flex lg:mr-4">
                 @auth
-                    <span class="text-xs tracking-[0.12em] uppercase text-gray-300">
-                        {{ auth()->user()->email }}
-                    </span>
+                    <div class="relative"
+                         x-data="{ profileMenu: false }">
+                        <button class="ves-profile-trigger"
+                                type="button"
+                                x-on:click="profileMenu = !profileMenu">
+                            Profile
 
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-
-                        <button class="text-sm font-medium transition hover:opacity-75 ves-nav-link"
-                                type="submit">
-                            Logout
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="w-4 h-4"
+                                 viewBox="0 0 20 20"
+                                 fill="currentColor">
+                                <path fill-rule="evenodd"
+                                      d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.51a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z"
+                                      clip-rule="evenodd" />
+                            </svg>
                         </button>
-                    </form>
+
+                        <div x-cloak
+                             x-show="profileMenu"
+                             x-transition
+                             x-on:click.away="profileMenu = false"
+                             class="absolute right-0 z-50 w-48 mt-3 overflow-hidden bg-white border border-gray-100 rounded-lg shadow-xl ves-menu-panel">
+                            <a class="ves-profile-menu-item"
+                               href="{{ route('account.orders') }}">
+                                Orders
+                            </a>
+
+                            <a class="ves-profile-menu-item border-t border-gray-100"
+                               href="{{ route('account.address-book') }}">
+                                Address Book
+                            </a>
+
+                            <a class="ves-profile-menu-item border-t border-gray-100"
+                               href="{{ route('account.security') }}">
+                                Security
+                            </a>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="ves-profile-menu-item w-full text-left border-t border-gray-100"
+                                        type="submit">
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 @else
                     <a class="text-sm font-medium transition hover:opacity-75 ves-nav-link"
                        href="{{ route('login') }}">
@@ -87,8 +121,23 @@
                             @endforeach
 
                             @auth
-                                <li class="border-t border-gray-100 pt-4 text-xs uppercase tracking-[0.16em] text-gray-500">
-                                    {{ auth()->user()->email }}
+                                <li class="border-t border-gray-100 pt-4">
+                                    <a class="text-sm font-medium ves-nav-link"
+                                       href="{{ route('account.orders') }}">
+                                        Orders
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="text-sm font-medium ves-nav-link"
+                                       href="{{ route('account.address-book') }}">
+                                        Address Book
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="text-sm font-medium ves-nav-link"
+                                       href="{{ route('account.security') }}">
+                                        Security
+                                    </a>
                                 </li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">

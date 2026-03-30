@@ -34,6 +34,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Storefront Access Lock
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, storefront pages require an authenticated user.
+    | Guests are redirected to the login page. Auth routes remain public.
+    |
+    */
+
+ //   'storefront_requires_auth' => (bool) env('STOREFRONT_REQUIRES_AUTH', false),
+    'storefront_requires_auth' =>($_SERVER['HTTP_HOST'] ?? null) === 'store.vital.lndo.site'
+        ? true
+        : (bool) env('STOREFRONT_REQUIRES_AUTH', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Theme Configuration
     |--------------------------------------------------------------------------
     |

@@ -3,17 +3,22 @@
 namespace App\Livewire;
 
 use App\Support\LandingSignature;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 use Livewire\Component;
+use App\Models\UserAddress;
 use Lunar\Facades\CartSession;
 use Lunar\Facades\Payments;
 use Lunar\Facades\ShippingManifest;
 use Lunar\Models\Cart;
 use Lunar\Models\CartAddress;
+use Lunar\Models\Customer;
 use Lunar\Models\Country;
+use Lunar\Models\Order;
 
 class CheckoutPage extends Component
 {
@@ -31,6 +36,21 @@ class CheckoutPage extends Component
      * The billing address instance.
      */
     public ?CartAddress $billing = null;
+
+    /**
+     * Selected address book entry for authenticated users.
+     */
+    public ?int $selectedAddressBookId = null;
+
+    /**
+     * Toggle between saved addresses and new address entry.
+     */
+    public bool $showNewAddressForm = false;
+
+    /**
+     * Whether the new address should become the default address.
+     */
+    public bool $setNewAddressAsDefault = false;
 
     /**
      * The current checkout step.
@@ -111,6 +131,8 @@ class CheckoutPage extends Component
                     return;
                 }
 
+                $this->linkOrderCustomerToAuthenticatedUser((int) $orderId);
+
                 $this->redirect($this->signedSuccessUrl((int) $orderId));
 
                 return;
@@ -141,6 +163,8 @@ class CheckoutPage extends Component
                     return;
                 }
 
+                $this->linkOrderCustomerToAuthenticatedUser((int) $orderId);
+
                 $this->redirect($this->signedSuccessUrl((int) $orderId));
 
                 return;
@@ -164,6 +188,17 @@ class CheckoutPage extends Component
             }
         }
 
+        if (Auth::check()) {
+            $addressBook = $this->userAddressBook;
+
+            if ($addressBook->isEmpty()) {
+                $this->showNewAddressForm = true;
+            } else {
+                $this->showNewAddressForm = false;
+                $this->selectedAddressBookId = $addressBook->first()->id;
+            }
+        }
+
         $this->determineCheckoutStep();
     }
 
@@ -171,6 +206,55 @@ class CheckoutPage extends Component
     {
         $this->shippingIsBilling = true;
         $this->cart = CartSession::current();
+
+        if (Auth::check() && ! $this->selectedAddressBookId && $this->userAddressBook->isNotEmpty()) {
+            $this->selectedAddressBookId = $this->userAddressBook->first()->id;
+        }
+    }
+
+    public function beginNewAddress(): void
+    {
+        $this->showNewAddressForm = true;
+        $this->selectedAddressBookId = null;
+        $this->setNewAddressAsDefault = false;
+
+        $this->shipping = new CartAddress;
+
+        if ($defaultCountry = Country::firstWhere('iso3', 'AUS')) {
+            $this->shipping->country_id = $defaultCountry->id;
+        }
+    }
+
+    public function cancelNewAddress(): void
+    {
+        if (! Auth::check() || $this->userAddressBook->isEmpty()) {
+            return;
+        }
+
+        $this->showNewAddressForm = false;
+        $this->setNewAddressAsDefault = false;
+        $this->selectedAddressBookId = $this->selectedAddressBookId ?: $this->userAddressBook->first()->id;
+    }
+
+    public function useSelectedAddressBookAddress(): void
+    {
+        if (! Auth::check() || ! $this->selectedAddressBookId) {
+            return;
+        }
+
+        $address = $this->userAddressBook->firstWhere('id', $this->selectedAddressBookId);
+
+        if (! $address) {
+            return;
+        }
+
+        $cartAddress = new CartAddress;
+        $cartAddress->fill($this->userAddressPayload($address));
+
+        $this->shipping = $cartAddress;
+
+        $this->saveAddress('shipping');
+        $this->showNewAddressForm = false;
     }
 
     /**
@@ -260,6 +344,12 @@ class CheckoutPage extends Component
             $this->getAddressValidation($type)
         );
 
+        $contactEmailField = "{$type}.contact_email";
+
+        if (! $this->validateGuestEmailAvailability((string) data_get($validatedData, $contactEmailField), $contactEmailField)) {
+            return;
+        }
+
         $address = $this->{$type};
 
         if ($type == 'billing') {
@@ -291,11 +381,69 @@ class CheckoutPage extends Component
                 $this->shipping->save();
                 $this->chosenShipping = null;
             }
+
+            if (Auth::check() && $this->showNewAddressForm) {
+                $this->storeAddressInAddressBook($validatedData['shipping']);
+                $this->showNewAddressForm = false;
+                $this->setNewAddressAsDefault = false;
+            }
         }
 
         $this->refreshCart();
 
         $this->determineCheckoutStep();
+    }
+
+    protected function storeAddressInAddressBook(array $payload): void
+    {
+        $user = Auth::user();
+
+        if (! $user instanceof User) {
+            return;
+        }
+
+        $isFirstAddress = $user->addresses()->count() === 0;
+        $isDefault = $isFirstAddress || $this->setNewAddressAsDefault;
+
+        if ($isDefault) {
+            $user->addresses()->update(['is_default' => false]);
+        }
+
+        $address = $user->addresses()->create([
+            'first_name' => $payload['first_name'] ?? null,
+            'last_name' => $payload['last_name'] ?? null,
+            'company_name' => $payload['company_name'] ?? null,
+            'line_one' => $payload['line_one'] ?? null,
+            'line_two' => $payload['line_two'] ?? null,
+            'line_three' => $payload['line_three'] ?? null,
+            'city' => $payload['city'] ?? null,
+            'state' => $payload['state'] ?? null,
+            'postcode' => $payload['postcode'] ?? null,
+            'country_id' => $payload['country_id'] ?? null,
+            'contact_email' => $payload['contact_email'] ?? null,
+            'contact_phone' => $payload['contact_phone'] ?? null,
+            'is_default' => $isDefault,
+        ]);
+
+        $this->selectedAddressBookId = $address->id;
+    }
+
+    protected function userAddressPayload(UserAddress $address): array
+    {
+        return [
+            'first_name' => $address->first_name,
+            'last_name' => $address->last_name,
+            'company_name' => $address->company_name,
+            'line_one' => $address->line_one,
+            'line_two' => $address->line_two,
+            'line_three' => $address->line_three,
+            'city' => $address->city,
+            'state' => $address->state,
+            'postcode' => $address->postcode,
+            'country_id' => $address->country_id,
+            'contact_email' => $address->contact_email,
+            'contact_phone' => $address->contact_phone,
+        ];
     }
 
     /**
@@ -314,6 +462,16 @@ class CheckoutPage extends Component
 
     public function checkout()
     {
+        $this->ensureAuthenticatedCheckoutCustomerLink();
+
+        if (! Auth::check()) {
+            $shippingEmail = (string) ($this->cart?->shippingAddress?->contact_email ?? '');
+
+            if (! $this->validateGuestEmailAvailability($shippingEmail, 'shipping.contact_email')) {
+                return;
+            }
+        }
+
         $payment = Payments::cart($this->cart)->withData([
             'payment_intent' => $this->payment_intent,
         ])->authorize();
@@ -324,6 +482,8 @@ class CheckoutPage extends Component
             if (! $orderId) {
                 return $this->redirectRoute('checkout.view');
             }
+
+            $this->linkOrderCustomerToAuthenticatedUser((int) $orderId);
 
             return $this->redirect($this->signedSuccessUrl((int) $orderId));
         }
@@ -337,6 +497,21 @@ class CheckoutPage extends Component
     public function getCountriesProperty(): Collection
     {
         return Country::whereIn('iso3', ['AUS', 'NZL'])->get();
+    }
+
+    public function getUserAddressBookProperty(): Collection
+    {
+        $user = Auth::user();
+
+        if (! $user instanceof User) {
+            return collect();
+        }
+
+        return $user->addresses()
+            ->with('country')
+            ->orderByDesc('is_default')
+            ->latest()
+            ->get();
     }
 
     /**
@@ -388,6 +563,116 @@ class CheckoutPage extends Component
             now()->addMinutes(60),
             ['order_id' => $orderId]
         );
+    }
+
+    protected function validateGuestEmailAvailability(string $email, string $field): bool
+    {
+        if (Auth::check()) {
+            return true;
+        }
+
+        $normalizedEmail = strtolower(trim($email));
+
+        if ($normalizedEmail === '') {
+            return true;
+        }
+
+        $isRegisteredCustomerUser = User::query()
+            ->whereRaw('LOWER(email) = ?', [$normalizedEmail])
+            ->whereHas('customers')
+            ->exists();
+
+        if (! $isRegisteredCustomerUser) {
+            return true;
+        }
+
+        $this->addError($field, 'This email account is already registered and requires login.');
+
+        return false;
+    }
+
+    protected function linkOrderCustomerToAuthenticatedUser(int $orderId): void
+    {
+        $user = Auth::user();
+
+        if (! $user instanceof User) {
+            return;
+        }
+
+        $order = Order::query()->with('customer.users')->find($orderId);
+
+        if (! $order) {
+            return;
+        }
+
+        $customer = $order->customer ?: $this->resolveOrCreateCustomerForUser($user);
+
+        if (! $customer) {
+            return;
+        }
+
+        if ((int) $order->customer_id !== (int) $customer->id) {
+            $order->customer_id = $customer->id;
+            $order->save();
+        }
+
+        $customer->users()->syncWithoutDetaching([$user->id]);
+    }
+
+    protected function ensureAuthenticatedCheckoutCustomerLink(): void
+    {
+        $user = Auth::user();
+
+        if (! $user instanceof User || ! $this->cart) {
+            return;
+        }
+
+        $customer = $this->resolveOrCreateCustomerForUser($user);
+
+        if (! $customer) {
+            return;
+        }
+
+        $dirty = false;
+
+        if ((int) $this->cart->customer_id !== (int) $customer->id) {
+            $this->cart->customer_id = $customer->id;
+            $dirty = true;
+        }
+
+        if ((int) $this->cart->user_id !== (int) $user->id) {
+            $this->cart->user_id = $user->id;
+            $dirty = true;
+        }
+
+        if ($dirty) {
+            $this->cart->save();
+            $this->refreshCart();
+        }
+    }
+
+    protected function resolveOrCreateCustomerForUser(User $user): ?Customer
+    {
+        $customer = $user->latestCustomer();
+
+        if ($customer) {
+            $customer->users()->syncWithoutDetaching([$user->id]);
+
+            return $customer;
+        }
+
+        $nameParts = preg_split('/\s+/', trim((string) $user->name)) ?: [];
+        $firstName = $nameParts[0] ?? 'Customer';
+        $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : 'Account';
+
+        $customer = Customer::query()->create([
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+        ]);
+
+        $customer->users()->syncWithoutDetaching([$user->id]);
+
+        return $customer;
     }
 
     public function render(): View

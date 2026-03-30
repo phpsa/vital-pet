@@ -63,6 +63,8 @@ class Kernel extends HttpKernel
         'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'external.signed' => \App\Http\Middleware\ValidateExternalLandingSignature::class,
+        'registration.open' => \App\Http\Middleware\EnsureStorefrontRegistrationIsOpen::class,
+        'storefront.auth_lock' => \App\Http\Middleware\RequireAuthenticatedStorefrontAccess::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];

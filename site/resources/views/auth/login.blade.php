@@ -18,6 +18,12 @@
           action="{{ route('login') }}">
         @csrf
 
+                @if (! empty($redirectTo))
+                        <input name="redirect_to"
+                                     type="hidden"
+                                     value="{{ $redirectTo }}">
+                @endif
+
         <label class="ves-auth-field">
             <span>Email address</span>
             <input name="email"
@@ -52,7 +58,7 @@
             </label>
 
             <a class="ves-link"
-               href="{{ route('password.request') }}">
+               href="{{ route('password.request', ! empty($redirectTo) ? ['redirect_to' => $redirectTo] : []) }}">
                 Forgot password?
             </a>
         </div>
@@ -62,4 +68,11 @@
             Sign in
         </button>
     </form>
+
+    @if (! config('template.storefront_requires_auth'))
+        <a class="ves-link ves-auth-secondary-link"
+           href="{{ route('register', ! empty($redirectTo) ? ['redirect_to' => $redirectTo] : []) }}">
+            Need an account? Register
+        </a>
+    @endif
 </x-layouts.auth>

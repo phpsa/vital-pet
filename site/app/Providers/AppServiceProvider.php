@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Filament\Lunar\Extensions\OrderResourceExtension;
 use App\Modifiers\ShippingModifier;
+use App\Observers\OrderObserver;
 use App\Support\TemplateHelper;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
             ])
         )
             ->register();
+
+        LunarPanel::extensions([
+            \Lunar\Admin\Filament\Resources\OrderResource\Pages\ManageOrder::class => OrderResourceExtension::class,
+        ]);
     }
 
     /**
@@ -46,6 +52,8 @@ class AppServiceProvider extends ServiceProvider
             \App\Models\Product::class,
             // \App\Models\CustomProduct::class,
         );
+
+        \Lunar\Models\Order::observe(OrderObserver::class);
     }
 
     /**

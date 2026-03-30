@@ -83,6 +83,35 @@
             </div>
 
             <div class="space-y-6 lg:col-span-2">
+                @guest
+                    <section class="bg-white border border-gray-100 rounded-xl">
+                        <div class="flex items-center h-16 px-6 border-b border-gray-100">
+                            <h3 class="text-lg font-medium">Checkout Options</h3>
+                        </div>
+
+                        <div class="p-6">
+                            <p class="text-sm text-gray-600">
+                                You can sign in to use saved addresses and faster checkout, create a new account,
+                                or continue as a guest.
+                            </p>
+
+                            <div class="ves-checkout-guest-actions mt-6 justify-end">
+                                <a class="px-5 py-3 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-900"
+                                   href="{{ route('login', ['redirect_to' => 'checkout']) }}">
+                                    Login & Return to Checkout
+                                </a>
+
+                                @if (! config('template.storefront_requires_auth'))
+                                    <a class="px-5 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+                                       href="{{ route('register', ['redirect_to' => 'checkout']) }}">
+                                        Register
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </section>
+                @endguest
+
                 @include('partials.checkout.address', [
                     'type' => 'shipping',
                     'step' => $steps['shipping_address'],

@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 use Lunar\Base\Traits\LunarUser;
+use Lunar\Base\LunarUser as LunarUserContract;
 
-class User extends Authenticatable
+class User extends Authenticatable implements LunarUserContract
 {
     use HasApiTokens, HasFactory, LunarUser, Notifiable;
 
@@ -41,4 +43,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(UserAddress::class);
+    }
 }

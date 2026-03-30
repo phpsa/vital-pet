@@ -129,6 +129,39 @@ body.ves-theme {
     color: #eee;
 }
 
+.ves-theme .ves-nav .ves-profile-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    padding: 0.42rem 0.72rem;
+    color: #f2f2f2;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.ves-theme .ves-nav .ves-profile-trigger:hover {
+    border-color: rgba(255, 255, 255, 0.46);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.ves-theme .ves-nav .ves-menu-panel .ves-profile-menu-item {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1f2937;
+    background: transparent;
+}
+
+.ves-theme .ves-nav .ves-menu-panel .ves-profile-menu-item:hover {
+    background: #f9fafb;
+}
+
 .ves-theme .ves-nav .ves-menu-panel,
 .ves-theme .ves-nav .ves-cart-panel {
     background: #fff;
@@ -254,6 +287,13 @@ body.ves-theme {
     display: inline-block;
     margin-top: 1rem;
     font-size: 0.92rem;
+}
+
+.ves-theme .ves-checkout-guest-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
 }
 
 .ves-theme .ves-hero {
@@ -695,6 +735,16 @@ body.ves-theme {
 
     .ves-theme .ves-catalog-products {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ves-theme .ves-checkout-guest-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ves-theme .ves-checkout-guest-actions a {
+        width: 100%;
+        justify-content: center;
     }
 
     .ves-theme .member-hero {

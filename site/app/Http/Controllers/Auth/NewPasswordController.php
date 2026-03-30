@@ -16,13 +16,18 @@ class NewPasswordController extends Controller
 {
     public function create(Request $request): View
     {
+        $redirectTo = $this->resolveRedirectKey($request) ?: $request->session()->get('auth.redirect_to');
+
         return view('auth.reset-password', [
             'request' => $request,
+            'redirectTo' => $redirectTo,
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
+        $redirectTo = $this->resolveRedirectKey($request) ?: $request->session()->get('auth.redirect_to');
+
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
@@ -42,11 +47,29 @@ class NewPasswordController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
+            $request->session()->forget('auth.redirect_to');
+
+            if ($redirectTo === 'checkout') {
+                return redirect()
+                    ->route('login', ['redirect_to' => 'checkout'])
+                    ->with('status', __($status));
+            }
+
             return redirect()->route('login')->with('status', __($status));
         }
 
         return back()
-            ->withInput($request->only('email'))
+            ->withInput($request->only('email', 'redirect_to'))
             ->withErrors(['email' => [__($status)]]);
+    }
+
+    private function resolveRedirectKey(Request $request): ?string
+    {
+        $redirectTo = (string) $request->input('redirect_to', $request->query('redirect_to', ''));
+
+        return match ($redirectTo) {
+            'checkout' => 'checkout',
+            default => null,
+        };
     }
 }

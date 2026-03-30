@@ -14,11 +14,19 @@ class AuthenticatedSessionController extends Controller
 {
     public function create(): View
     {
-        return view('auth.login');
+        $redirectTo = request()->query('redirect_to');
+
+        return view('auth.login', [
+            'redirectTo' => $redirectTo,
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
+        if ($this->resolveRedirectUrl($request)) {
+            $request->session()->put('url.intended', $this->resolveRedirectUrl($request));
+        }
+
         $credentials = $request->validate([
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
@@ -45,5 +53,15 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    private function resolveRedirectUrl(Request $request): ?string
+    {
+        $redirectTo = (string) $request->input('redirect_to', $request->query('redirect_to', ''));
+
+        return match ($redirectTo) {
+            'checkout' => route('checkout.view'),
+            default => null,
+        };
     }
 }
