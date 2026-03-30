@@ -19,6 +19,9 @@
         <li>
             {{ $line->description }} x {{ $line->quantity }}
             ({{ $line->total->formatted }})
+            @if ((bool) data_get($line->meta, 'inventory.is_backorder', false))
+                <strong style="color: #b45309;">[On Backorder]</strong>
+            @endif
         </li>
     @endforeach
 </ul>

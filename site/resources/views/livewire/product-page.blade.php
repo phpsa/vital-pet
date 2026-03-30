@@ -101,6 +101,14 @@
                         @endforeach
                     </div>
 
+                    @if ($this->stockStatus)
+                        <div class="inline-flex mt-6 px-3 py-2 rounded-lg @if($this->stockStatusTone === 'danger') bg-red-50 border border-red-200 @elseif($this->stockStatusTone === 'warning') bg-orange-100 border border-gray-200 @else bg-green-50 border border-green-200 @endif">
+                            <p class="text-sm font-medium @if($this->stockStatusTone === 'danger') text-red-800 @elseif($this->stockStatusTone === 'warning') text-orange-700 @else text-green-800 @endif">
+                                {{ $this->stockStatus }}
+                            </p>
+                        </div>
+                    @endif
+
                     <div class="max-w-xs mt-8">
                         <livewire:components.add-to-cart :purchasable="$this->variant"
                                                          :wire:key="$this->variant->id">

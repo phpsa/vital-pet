@@ -22,6 +22,11 @@
                                 <div class="flex-1 ml-4">
                                     <p class="text-sm font-medium max-w-[35ch]">
                                         {{ $line->purchasable->getDescription() }}
+                                        @if ($line->purchasable && $line->purchasable->purchasable === 'in_stock_or_on_backorder' && (int) $line->quantity > max(0, (int) $line->purchasable->stock))
+                                            <span class="inline-block ml-2 px-2 py-0.5 text-xs font-semibold text-amber-800 bg-amber-100 rounded-full">
+                                                Backorder
+                                            </span>
+                                        @endif
                                     </p>
 
                                     <span class="block mt-1 text-xs text-gray-500">

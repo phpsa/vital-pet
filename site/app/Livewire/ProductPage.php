@@ -115,6 +115,77 @@ class ProductPage extends Component
         return $this->images->first();
     }
 
+    /**
+     * Get the stock status text for display on product page.
+     */
+    public function getStockStatusProperty(): ?string
+    {
+        if ($this->variant->purchasable === 'always') {
+            return '5+ in Stock';
+        }
+
+        if ($this->variant->purchasable === 'in_stock') {
+            $stock = max(0, (int) $this->variant->stock);
+
+            if ($stock <= 0) {
+                return 'Out of Stock';
+            }
+
+            return $stock >= 5 ? '5+ in Stock' : "{$stock} in Stock";
+        }
+
+        if ($this->variant->purchasable === 'in_stock_or_on_backorder') {
+            $stock = max(0, (int) $this->variant->stock);
+            $backorder = max(0, (int) $this->variant->backorder);
+
+            if ($stock <= 0 && $backorder <= 0) {
+                return 'Out of Stock';
+            }
+
+            $stockText = '';
+            if ($stock > 0) {
+                $stockText = $stock >= 5 ? '5+ in Stock' : "{$stock} in Stock";
+            }
+
+            $backorderText = '';
+            if ($backorder > 0) {
+                $backorderText = $backorder >= 5 ? '5+ on Backorder' : "{$backorder} on Backorder";
+            }
+
+            if ($stockText && $backorderText) {
+                return "{$stockText} / {$backorderText}";
+            }
+
+            return $stockText ?: $backorderText;
+        }
+
+        return null;
+    }
+
+    public function getStockStatusToneProperty(): string
+    {
+        if ($this->variant->purchasable === 'always') {
+            return 'success';
+        }
+
+        if ($this->variant->purchasable === 'in_stock') {
+            return (int) $this->variant->stock > 0 ? 'success' : 'danger';
+        }
+
+        if ($this->variant->purchasable === 'in_stock_or_on_backorder') {
+            $stock = max(0, (int) $this->variant->stock);
+            $backorder = max(0, (int) $this->variant->backorder);
+
+            if ($stock <= 0 && $backorder <= 0) {
+                return 'danger';
+            }
+
+            return $backorder > 0 ? 'warning' : 'success';
+        }
+
+        return 'danger';
+    }
+
     public function render(): View
     {
         return view('livewire.product-page');

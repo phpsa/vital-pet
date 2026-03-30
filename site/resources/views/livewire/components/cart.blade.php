@@ -59,6 +59,11 @@
                                         <div class="flex-1 ml-4">
                                             <p class="max-w-[20ch] text-sm font-medium">
                                                 {{ $line['description'] }}
+                                                @if($line['on_backorder'])
+                                                    <span class="inline-block ml-2 px-2 py-0.5 text-xs font-semibold text-amber-800 bg-amber-100 rounded-full">
+                                                        Backorder
+                                                    </span>
+                                                @endif
                                             </p>
 
                                             <span class="block mt-1 text-xs text-gray-500">

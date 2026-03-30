@@ -120,7 +120,7 @@ class AirwallexPaymentType extends AbstractPayment
                 ],
             ]);
 
-            Order::query()->whereKey($this->order->id)->update([
+            $this->order->update([
                 'status' => $orderStatus,
                 'meta' => $meta,
                 'placed_at' => now(),

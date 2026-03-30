@@ -464,6 +464,10 @@ class CheckoutPage extends Component
     {
         $this->ensureAuthenticatedCheckoutCustomerLink();
 
+        if (! $this->validateCartInventory()) {
+            return;
+        }
+
         if (! Auth::check()) {
             $shippingEmail = (string) ($this->cart?->shippingAddress?->contact_email ?? '');
 
@@ -489,6 +493,49 @@ class CheckoutPage extends Component
         }
 
         return $this->redirectRoute('checkout.view');
+    }
+
+    protected function validateCartInventory(): bool
+    {
+        if (! $this->cart) {
+            return false;
+        }
+
+        $this->cart->loadMissing('lines.purchasable');
+
+        $requestedByPurchasable = [];
+
+        foreach ($this->cart->lines as $line) {
+            $key = $line->purchasable_type.':'.$line->purchasable_id;
+            $requestedByPurchasable[$key] = ($requestedByPurchasable[$key] ?? 0) + (int) $line->quantity;
+        }
+
+        foreach ($this->cart->lines as $line) {
+            $purchasable = $line->purchasable;
+
+            if (! $purchasable) {
+                $this->paymentError = 'A product in your cart is no longer available. Please update your cart.';
+
+                return false;
+            }
+
+            $key = $line->purchasable_type.':'.$line->purchasable_id;
+            $requested = (int) ($requestedByPurchasable[$key] ?? 0);
+            $available = match ($purchasable->purchasable) {
+                'always' => PHP_INT_MAX,
+                'in_stock' => max(0, (int) $purchasable->stock),
+                'in_stock_or_on_backorder' => max(0, (int) $purchasable->stock + (int) $purchasable->backorder),
+                default => 0,
+            };
+
+            if ($requested > $available) {
+                $this->paymentError = 'One or more items exceed available inventory. Please update your cart quantities.';
+
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
