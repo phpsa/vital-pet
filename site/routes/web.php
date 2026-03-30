@@ -6,6 +6,8 @@ use App\Livewire\CollectionPage;
 use App\Livewire\Home;
 use App\Livewire\ProductPage;
 use App\Livewire\SearchPage;
+use App\Http\Controllers\MockPaymentGatewayController;
+use App\Http\Controllers\SpecialLandingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,3 +32,10 @@ Route::get('search', SearchPage::class)->name('search.view');
 Route::get('checkout', CheckoutPage::class)->name('checkout.view');
 
 Route::get('checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
+
+Route::match(['GET', 'POST'], 'internal/checkout', SpecialLandingController::class)
+	->middleware('external.signed')
+	->name('landing.special');
+
+Route::match(['GET', 'POST'], 'internal/mock-gateway', MockPaymentGatewayController::class)
+	->name('landing.gateway.mock');

@@ -50,6 +50,7 @@ tooling:
 proxy:
   appserver:
     - vital.lndo.site
+    - store.vital.lndo.site
   phpmyadmin:
     - phpmyadmin.vital.lndo.site
   mail:

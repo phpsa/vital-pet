@@ -66,6 +66,13 @@ class AirwallexManager
         return $response;
     }
 
+    public function createIntentFromPayload(array $payload): array
+    {
+        $payload = array_filter($payload, fn ($value) => ! is_null($value));
+
+        return $this->request('post', config('lunar.airwallex.intent.create_endpoint'), $payload);
+    }
+
     public function fetchIntent(string $intentId): ?array
     {
         if (! $intentId) {

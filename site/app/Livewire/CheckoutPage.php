@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Support\LandingSignature;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -56,11 +58,6 @@ class CheckoutPage extends Component
     ];
 
     /**
-     * The payment type we want to use.
-     */
-    public string $paymentType = 'airwallex';
-
-    /**
      * {@inheritDoc}
      */
     protected $listeners = [
@@ -69,6 +66,8 @@ class CheckoutPage extends Component
     ];
 
     public $payment_intent = null;
+
+    public string $paymentError = '';
 
     protected $queryString = [
         'payment_intent',
@@ -91,7 +90,6 @@ class CheckoutPage extends Component
     public function mount(): void
     {
         $this->shippingIsBilling = true;
-        $this->paymentType = 'airwallex';
 
         if (! $this->cart = CartSession::current()) {
             $this->redirect('/');
@@ -100,7 +98,7 @@ class CheckoutPage extends Component
         }
 
         if ($this->payment_intent) {
-            $payment = Payments::driver($this->paymentType)->cart($this->cart)->withData([
+            $payment = Payments::driver('airwallex')->cart($this->cart)->withData([
                 'payment_intent' => $this->payment_intent,
             ])->authorize();
 
@@ -121,6 +119,34 @@ class CheckoutPage extends Component
             $this->redirectRoute('checkout.view');
 
             return;
+        }
+
+        // Handle redirect gateway return (Airwallex via landing page)
+        $gatewayReturnType = (string) request()->query('type', '');
+        $gatewayIntentId = (string) request()->query('id', '');
+
+        if ($gatewayReturnType === 'CANCEL_URL') {
+            $this->paymentError = 'Payment was cancelled. Please try again.';
+        } elseif ($gatewayReturnType === 'SUCCESS_URL' && $gatewayIntentId !== '') {
+            $payment = Payments::driver('airwallex')->cart($this->cart)->withData([
+                'payment_intent' => $gatewayIntentId,
+            ])->authorize();
+
+            if ($payment->success) {
+                $orderId = $payment->orderId ?: $this->cart->completedOrder?->id;
+
+                if (! $orderId) {
+                    $this->redirectRoute('checkout.view');
+
+                    return;
+                }
+
+                $this->redirect($this->signedSuccessUrl((int) $orderId));
+
+                return;
+            }
+
+            $this->paymentError = $payment->message ?: 'Payment could not be confirmed. Please try again.';
         }
 
         // Do we have a shipping address?
@@ -144,7 +170,6 @@ class CheckoutPage extends Component
     public function hydrate(): void
     {
         $this->shippingIsBilling = true;
-        $this->paymentType = 'airwallex';
         $this->cart = CartSession::current();
     }
 
@@ -369,5 +394,101 @@ class CheckoutPage extends Component
     {
         return view('livewire.checkout-page')
             ->layout('layouts.checkout');
+    }
+
+    public function getIsAirwallexEnabledProperty(): bool
+    {
+        // When the sending (redirect) gateway is active, it takes over from embedded Airwallex.
+        if ($this->isSendingGatewayEnabled) {
+            return false;
+        }
+
+        return filled((string) config('services.airwallex.client_id'))
+            && filled((string) config('services.airwallex.api_key'));
+    }
+
+    public function getIsSendingGatewayEnabledProperty(): bool
+    {
+        return filled((string) config('services.sending.signing_key'));
+    }
+
+    public function getIsAirwallexRedirectModeProperty(): bool
+    {
+        return strtolower((string) config('lunar.airwallex.mode', 'embedded')) === 'redirect';
+    }
+
+    public function getShowPaymentGatewayLabelsProperty(): bool
+    {
+        return count($this->availablePaymentTypes) > 1;
+    }
+
+    public function getAvailablePaymentTypesProperty(): array
+    {
+        $types = [];
+
+        if ($this->isAirwallexEnabled) {
+            $types[] = 'airwallex';
+        }
+
+        if ($this->isSendingGatewayEnabled) {
+            $types[] = 'sending';
+        }
+
+        return $types;
+    }
+
+    public function getSendingGatewayPacketProperty(): ?array
+    {
+        if (! $this->isSendingGatewayEnabled || ! $this->cart) {
+            return null;
+        }
+
+        $payload = $this->airwallexLikePayload();
+        $payloadJson = json_encode($payload, JSON_UNESCAPED_SLASHES);
+
+        if (! is_string($payloadJson)) {
+            return null;
+        }
+
+        $target = (string) (config('services.sending.landing_url') ?: route('landing.special'));
+        $targetWithoutQuery = strtok($target, '?') ?: $target;
+        $path = trim((string) parse_url($targetWithoutQuery, PHP_URL_PATH), '/');
+
+        parse_str((string) parse_url($target, PHP_URL_QUERY), $existingQuery);
+
+        $query = array_merge($existingQuery, [
+            'source' => parse_url((string) config('app.url'), PHP_URL_HOST) ?: 'checkout',
+            'expires' => now()->addMinutes(10)->timestamp,
+            'payload_hash' => hash('sha256', $payloadJson),
+        ]);
+
+        $signature = LandingSignature::sign(
+            method: 'POST',
+            path: $path,
+            query: $query,
+            key: (string) config('services.sending.signing_key')
+        );
+
+        $signedQuery = array_merge($query, ['signature' => $signature]);
+
+        return [
+            'url' => $targetWithoutQuery.'?'.http_build_query($signedQuery, '', '&', PHP_QUERY_RFC3986),
+            'payload' => $payloadJson,
+        ];
+    }
+
+    protected function airwallexLikePayload(): array
+    {
+        $cart = $this->cart->calculate();
+        $decimalPlaces = $cart->currency->decimal_places ?? 2;
+        $amount = round($cart->total->value / (10 ** $decimalPlaces), $decimalPlaces);
+
+        return [
+            'amount' => $amount,
+            'currency' => strtoupper($cart->currency->code),
+            'merchant_order_id' => 'cart-'.$cart->id.'-'.now()->timestamp,
+            'request_id' => 'req-'.$cart->id.'-'.Str::uuid()->toString(),
+            'return_url' => route('checkout.view'),
+        ];
     }
 }

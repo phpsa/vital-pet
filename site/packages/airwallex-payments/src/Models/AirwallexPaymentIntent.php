@@ -20,13 +20,16 @@ class AirwallexPaymentIntent extends BaseModel
     {
         $final = config('lunar.airwallex.final_statuses', ['SUCCEEDED', 'FAILED', 'CANCELLED']);
 
-        return $query->whereNotIn('status', $final);
+        return $query->where(function (Builder $q) use ($final) {
+            $q->whereNull('status')->orWhereNotIn('status', $final);
+        });
     }
 
     public function isActive(): bool
     {
         $final = config('lunar.airwallex.final_statuses', ['SUCCEEDED', 'FAILED', 'CANCELLED']);
 
-        return $this->status && ! in_array($this->status, $final, true);
+        // Null status means the intent has not yet been resolved — treat as active.
+        return is_null($this->status) || ! in_array($this->status, $final, true);
     }
 }

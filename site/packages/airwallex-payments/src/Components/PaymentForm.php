@@ -13,6 +13,8 @@ class PaymentForm extends Component
 
     public ?string $returnUrl = null;
 
+    public ?string $buttonLabel = null;
+
     public string $mode;
 
     public function mount(): void

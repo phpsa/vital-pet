@@ -1,5 +1,6 @@
 <div x-data="{
     mode: @js($mode),
+    payLabel: @js($buttonLabel ?: ($mode === 'redirect' ? 'Pay by card' : 'Pay with Airwallex')),
     callbackUrl: @js($this->callbackUrl),
     cancelUrl: @js($this->returnUrl ?: url()->current()),
     intentId: @js($this->intentId),
@@ -52,7 +53,7 @@
                 if (!window.AirwallexComponentsSDK) missing.push('sdk');
                 if (!this.intentId) missing.push('intent_id');
                 if (!this.clientSecret) missing.push('client_secret');
-                this.error = 'Embedded checkout is currently unavailable (' + missing.join(', ') + '). You can continue with redirect checkout.';
+                this.error = 'Embedded checkout is currently unavailable (' + missing.join(', ') + ').';
                 return;
             }
 
@@ -136,7 +137,7 @@ x-init="initEmbedded()">
         <div id="airwallex-dropin" class="min-h-[220px]"></div>
 
         <div class="mt-4 text-sm text-gray-600" x-show="!intentId || !clientSecret">
-            Embedded checkout is unavailable for this cart. You can continue with redirect checkout below.
+            Embedded checkout is unavailable for this cart.
         </div>
     </div>
 
@@ -145,7 +146,7 @@ x-init="initEmbedded()">
                 type="button"
                 x-bind:disabled="loading || !intentId || !clientSecret"
                 x-on:click.prevent="startRedirect()">
-            Pay with Airwallex
+            <span x-text="payLabel"></span>
         </button>
 
         <div class="mt-4 text-sm text-red-600" x-show="error" x-text="error"></div>

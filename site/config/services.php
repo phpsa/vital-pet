@@ -41,4 +41,14 @@ return [
         'api_key' => env('AIRWALLEX_API_KEY'),
     ],
 
+    'landing' => [
+        'signing_key' => env('LANDING_SIGNING_KEY'),
+        'gateway_url' => env('LANDING_GATEWAY_URL'),
+    ],
+
+    'sending' => [
+        'signing_key' => env('SENDING_SIGNING_KEY'),
+        'landing_url' => env('SENDING_LANDING_URL'),
+    ],
+
 ];

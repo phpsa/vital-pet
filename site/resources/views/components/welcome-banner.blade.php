@@ -29,22 +29,22 @@
 
     <div class="ves-hero-grid">
         <div class="ves-hero-tile"
-             style="background-image: url('https://picsum.photos/900/600?random=1');">
+             style="background-image: url('{{ asset('img/dog-acess.jpg') }}');">
             <span>Dog Accessories</span>
         </div>
 
         <div class="ves-hero-tile"
-             style="background-image: url('https://picsum.photos/900/600?random=2');">
+             style="background-image: url('{{ asset('img/dog-play.jpg') }}');">
             <span>Toys & Play</span>
         </div>
 
         <div class="ves-hero-tile"
-             style="background-image: url('https://picsum.photos/900/600?random=3');">
+             style="background-image: url('{{ asset('img/dog-treats.jpg') }}');">
             <span>Treats & Nutrition</span>
         </div>
 
         <div class="ves-hero-tile"
-             style="background-image: url('https://picsum.photos/900/600?random=4');">
+             style="background-image: url('{{ asset('img/dog-fun.jpg') }}');">
             <span>Walking Gear</span>
         </div>
     </div>
