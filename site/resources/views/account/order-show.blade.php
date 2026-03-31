@@ -2,7 +2,7 @@
     <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
         <x-breadcrumbs :items="[
             ['label' => 'Home', 'url' => url('/')],
-            ['label' => 'My Orders', 'url' => route('account.orders')],
+            ['label' => 'My Orders', 'url' => route('orders')],
             ['label' => $order->reference ?: ('#' . $order->id), 'url' => null],
         ]" />
 
@@ -11,7 +11,7 @@
                 <h1 class="text-lg font-medium">Order {{ $order->reference ?: ('#' . $order->id) }}</h1>
 
                 <a class="inline-flex items-center justify-center px-4 py-2 text-xs font-medium text-white bg-black border border-black rounded-lg hover:bg-gray-900"
-                   href="{{ route('account.orders') }}">
+                   href="{{ route('orders') }}">
                     Back to Orders
                 </a>
             </div>

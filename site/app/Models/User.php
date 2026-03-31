@@ -26,6 +26,7 @@ class User extends Authenticatable implements LunarUserContract
         'email',
         'password',
         'country_id',
+        'referred_by_id',
     ];
 
     /**
@@ -55,5 +56,20 @@ class User extends Authenticatable implements LunarUserContract
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
+    }
+
+    public function referredBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'referred_by_id');
+    }
+
+    public function referrals(): HasMany
+    {
+        return $this->hasMany(User::class, 'referred_by_id');
+    }
+
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class, 'invited_by_user_id');
     }
 }

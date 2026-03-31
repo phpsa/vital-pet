@@ -2,7 +2,7 @@
     <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
         <x-breadcrumbs :items="[
             ['label' => 'Home', 'url' => url('/')],
-            ['label' => 'My Orders', 'url' => route('account.orders')],
+            ['label' => 'My Orders', 'url' => route('orders')],
             ['label' => 'Security', 'url' => null],
         ]" />
 
@@ -25,7 +25,7 @@
 
                     <form class="grid grid-cols-1 gap-4 mt-4 max-w-xl"
                           method="POST"
-                          action="{{ route('account.security.email') }}">
+                          action="{{ route('security.email') }}">
                         @csrf
                         @method('PUT')
 
@@ -55,7 +55,7 @@
 
                     <form class="grid grid-cols-1 gap-4 mt-4 max-w-xl"
                           method="POST"
-                          action="{{ route('account.security.password') }}">
+                          action="{{ route('security.password') }}">
                         @csrf
                         @method('PUT')
 

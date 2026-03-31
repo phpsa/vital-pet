@@ -50,17 +50,17 @@
                              x-on:click.away="profileMenu = false"
                              class="absolute right-0 z-50 w-48 mt-3 overflow-hidden bg-white border border-gray-100 rounded-lg shadow-xl ves-menu-panel">
                             <a class="ves-profile-menu-item"
-                               href="{{ route('account.orders') }}">
+                               href="{{ route('orders') }}">
                                 Orders
                             </a>
 
                             <a class="ves-profile-menu-item border-t border-gray-100"
-                               href="{{ route('account.address-book') }}">
+                               href="{{ route('address-book') }}">
                                 Address Book
                             </a>
 
                             <a class="ves-profile-menu-item border-t border-gray-100"
-                               href="{{ route('account.security') }}">
+                               href="{{ route('security') }}">
                                 Security
                             </a>
 
@@ -123,19 +123,19 @@
                             @auth
                                 <li class="border-t border-gray-100 pt-4">
                                     <a class="text-sm font-medium ves-nav-link"
-                                       href="{{ route('account.orders') }}">
+                                       href="{{ route('orders') }}">
                                         Orders
                                     </a>
                                 </li>
                                 <li>
                                     <a class="text-sm font-medium ves-nav-link"
-                                       href="{{ route('account.address-book') }}">
+                                       href="{{ route('address-book') }}">
                                         Address Book
                                     </a>
                                 </li>
                                 <li>
                                     <a class="text-sm font-medium ves-nav-link"
-                                       href="{{ route('account.security') }}">
+                                       href="{{ route('security') }}">
                                         Security
                                     </a>
                                 </li>

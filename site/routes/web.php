@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CountrySwitcherController;
+use App\Http\Controllers\InvitationController;
 use App\Livewire\CheckoutPage;
 use App\Livewire\CheckoutSuccessPage;
 use App\Livewire\CollectionPage;
@@ -65,7 +66,17 @@ Route::middleware('auth')->group(function () {
 	Route::get('/security', [AccountController::class, 'security'])->name('security');
 	Route::put('/security/email', [AccountController::class, 'updateEmail'])->name('security.email');
 	Route::put('/security/password', [AccountController::class, 'updatePassword'])->name('security.password');
+
+	// Invite — only meaningful when storefront_requires_auth is enabled.
+	Route::get('/invite', [InvitationController::class, 'index'])->name('account.invite');
+	Route::post('/invite', [InvitationController::class, 'send'])->name('account.invite.send');
 });
+
+// Invited registration — always accessible regardless of storefront_requires_auth.
+Route::get('/register/invite/{token}', [InvitationController::class, 'showRegistration'])
+	->name('register.invited');
+Route::post('/register/invite/{token}', [InvitationController::class, 'register'])
+	->name('register.invited.store');
 
 Route::middleware('storefront.auth_lock')->group(function () {
 	Route::get('/', Home::class);

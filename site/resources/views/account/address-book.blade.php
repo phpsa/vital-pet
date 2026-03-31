@@ -2,7 +2,7 @@
     <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
         <x-breadcrumbs :items="[
             ['label' => 'Home', 'url' => url('/')],
-            ['label' => 'My Orders', 'url' => route('account.orders')],
+            ['label' => 'My Orders', 'url' => route('orders')],
             ['label' => 'Address Book', 'url' => null],
         ]" />
 
@@ -65,12 +65,12 @@
                                     <div class="flex flex-col items-end gap-2">
                                         <div class="flex items-center gap-2">
                                             <a class="inline-flex items-center justify-center min-w-[84px] px-3 py-2 text-xs font-medium text-center text-white bg-black border border-black rounded-lg hover:bg-gray-900"
-                                               href="{{ route('account.address-book', ['edit' => $address->id]) }}#address-modal">
+                                               href="{{ route('address-book', ['edit' => $address->id]) }}#address-modal">
                                                 Edit
                                             </a>
 
                                             <form method="POST"
-                                                  action="{{ route('account.address-book.delete', $address) }}"
+                                                  action="{{ route('address-book.delete', $address) }}"
                                                   onsubmit="return confirm('Delete this address?');">
                                                 @csrf
                                                 @method('DELETE')
@@ -94,7 +94,7 @@
 
                                         @if (! $address->is_default)
                                             <form method="POST"
-                                                  action="{{ route('account.address-book.default', $address) }}">
+                                                  action="{{ route('address-book.default', $address) }}">
                                                 @csrf
                                                 <button class="px-3 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
                                                         type="submit">
@@ -137,7 +137,7 @@
 
                                     <form class="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2"
                                           method="POST"
-                                          action="{{ $editingAddress ? route('account.address-book.update', $editingAddress) : route('account.address-book.store') }}">
+                                          action="{{ $editingAddress ? route('address-book.update', $editingAddress) : route('address-book.store') }}">
                                         @csrf
                                         @if ($editingAddress)
                                             @method('PUT')
@@ -260,7 +260,7 @@
 
                                         <div class="sm:col-span-2 flex justify-end pt-2">
                                             <a class="px-5 py-3 mr-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
-                                               href="{{ route('account.address-book') }}"
+                                               href="{{ route('address-book') }}"
                                                onclick="event.preventDefault(); closeAddressModal();">
                                                 Cancel
                                             </a>
@@ -291,7 +291,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const modal = document.getElementById('address-modal');
-            const closeUrl = '{{ route('account.address-book') }}';
+            const closeUrl = '{{ route('address-book') }}';
 
             if (!modal) {
                 return;

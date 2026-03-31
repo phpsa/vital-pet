@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Filament\Lunar\Extensions\OrderResourceExtension;
 use App\Filament\Lunar\Extensions\ProductInventoryExtension;
 use App\Filament\Lunar\Extensions\VariantInventoryExtension;
+use App\Filament\Lunar\Resources\InvitationResource;
+use App\Filament\Lunar\Resources\ReferralResource;
 use App\Modifiers\ShippingModifier;
 use App\Observers\OrderObserver;
 use App\Support\TemplateHelper;
@@ -25,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
         LunarPanel::panel(
             fn ($panel) => $panel->plugins([
                 new ShippingPlugin,
+            ])->resources([
+                InvitationResource::class,
+                ReferralResource::class,
             ])
         )
             ->register();
