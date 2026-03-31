@@ -3,7 +3,8 @@
          linesVisible: @entangle('linesVisible').live
     }"
     x-on:add-to-cart.window="window.scrollTo({ top: 0, behavior: 'smooth' })">
-    <button class="grid w-16 h-16 transition border-l border-gray-100 lg:border-l-transparent hover:opacity-75 ves-icon-button"
+    @php $cartCount = collect($lines ?? [])->sum('quantity'); @endphp
+    <button class="relative grid w-16 h-16 transition border-l border-gray-100 lg:border-l-transparent hover:opacity-75 ves-icon-button"
             x-on:click="linesVisible = !linesVisible">
         <span class="sr-only">Cart</span>
 
@@ -19,6 +20,12 @@
                       d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
         </span>
+
+        @if ($cartCount > 0)
+            <span class="absolute top-1.5 right-1.5 flex items-center justify-center min-w-[18px] h-[18px] px-[3px] text-[10px] font-bold leading-none rounded-full pointer-events-none" style="background:#cadb2a;color:#101720;">
+                {{ $cartCount > 99 ? '99+' : $cartCount }}
+            </span>
+        @endif
     </button>
 
     <div class="absolute inset-x-0 top-auto z-50 w-screen max-w-sm px-6 py-8 mx-auto mt-4 bg-white border border-gray-100 shadow-xl sm:left-auto rounded-xl ves-cart-panel"
@@ -57,9 +64,11 @@
                                         @endif
 
                                         <div class="flex-1 ml-4">
-                                            <p class="max-w-[20ch] text-sm font-medium">
+                                            <p class="max-w-[20ch] text-sm {{ !empty($line['out_of_stock']) ? 'font-bold text-red-600' : 'font-medium' }}">
                                                 {{ $line['description'] }}
-                                                @if($line['on_backorder'])
+                                                @if(!empty($line['out_of_stock']))
+                                                    &mdash; Out of Stock
+                                                @elseif($line['on_backorder'])
                                                     <span class="inline-block ml-2 px-2 py-0.5 text-xs font-semibold text-amber-800 bg-amber-100 rounded-full">
                                                         Backorder
                                                     </span>
@@ -109,21 +118,21 @@
                             @endforeach
                         </ul>
                     </div>
+
+                    <dl class="flex flex-wrap pt-4 mt-6 text-sm border-t border-gray-100">
+                        <dt class="w-1/2 font-medium">
+                            Sub Total
+                        </dt>
+
+                        <dd class="w-1/2 text-right">
+                            {{ $this->cart->subTotal->formatted() }}
+                        </dd>
+                    </dl>
                 @else
                     <p class="py-4 text-sm font-medium text-center text-gray-500">
                         Your cart is empty
                     </p>
                 @endif
-
-                <dl class="flex flex-wrap pt-4 mt-6 text-sm border-t border-gray-100">
-                    <dt class="w-1/2 font-medium">
-                        Sub Total
-                    </dt>
-
-                    <dd class="w-1/2 text-right">
-                        {{ $this->cart->subTotal->formatted() }}
-                    </dd>
-                </dl>
             @else
                 <p class="py-4 text-sm font-medium text-center text-gray-500">
                     Your cart is empty
@@ -131,7 +140,8 @@
             @endif
         </div>
 
-        @if ($this->cart)
+        @if ($this->cart && $lines)
+                @php $hasOutOfStock = collect($lines)->contains('out_of_stock', true); @endphp
             <div class="mt-4 space-y-4 text-center">
                 <button class="block w-full p-3 text-sm font-medium text-black border border-black rounded-lg hover:ring-1 hover:ring-black"
                         type="button"
@@ -139,12 +149,18 @@
                     Update Cart
                 </button>
 
-                <a class="block w-full p-3 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-gray-900"
-                   href="{{ route('checkout.view') }}"
-                   wire:navigate
-                >
-                    Checkout
-                </a>
+                    @if ($hasOutOfStock)
+                        <p class="block w-full p-3 text-sm font-medium text-center text-red-700 bg-red-50 rounded-lg border border-red-200">
+                            Remove out-of-stock items to checkout
+                        </p>
+                    @else
+                        <a class="block w-full p-3 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-gray-900"
+                           href="{{ route('checkout.view') }}"
+                           wire:navigate
+                        >
+                            Checkout
+                        </a>
+                    @endif
 
                 <a class="inline-block text-sm font-medium text-gray-600 underline hover:text-gray-500"
                    href="{{ url('/') }}">

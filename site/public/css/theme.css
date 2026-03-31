@@ -232,6 +232,100 @@ body.ves-theme {
     box-shadow: 0 0 0 3px rgba(202, 219, 42, 0.2);
 }
 
+.ves-theme .ves-auth-select-wrap {
+    position: relative;
+}
+
+.ves-theme .ves-auth-listbox-btn {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--ves-line-strong);
+    border-radius: 0.95rem;
+    background: #fff;
+    padding: 0.95rem 1rem;
+    color: var(--ves-text);
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.ves-theme .ves-auth-listbox-btn:focus {
+    outline: none;
+    border-color: #8a9c12;
+    box-shadow: 0 0 0 3px rgba(202, 219, 42, 0.2);
+}
+
+.ves-theme .ves-auth-listbox-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+    color: #475467;
+    transition: transform 0.15s;
+}
+
+.ves-theme .ves-auth-listbox-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    margin-top: 0.25rem;
+    overflow: hidden;
+    border-radius: 0.95rem;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    padding: 0.25rem 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    transform-origin: top left;
+}
+
+.ves-theme .ves-auth-listbox-option {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    color: var(--ves-text);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.ves-theme .ves-auth-listbox-option:hover {
+    background: #f3f4f6;
+}
+
+[x-cloak] { display: none !important; }
+
+.ves-theme .ves-auth-field select,
+.ves-theme .ves-auth-select {
+    width: 100%;
+    border: 1px solid var(--ves-line-strong);
+    border-radius: 0.95rem;
+    background: #fff;
+    padding: 0.95rem 2.5rem 0.95rem 1rem;
+    color: var(--ves-text);
+    appearance: none;
+}
+
+.ves-theme .ves-auth-field select option,
+.ves-theme .ves-auth-select option {
+    border: none;
+    outline: none;
+}
+
+.ves-theme .ves-auth-field select:focus,
+.ves-theme .ves-auth-select:focus {
+    outline: none;
+    border-color: #8a9c12;
+    box-shadow: 0 0 0 3px rgba(202, 219, 42, 0.2);
+}
+
 .ves-theme .ves-auth-row {
     display: flex;
     align-items: center;

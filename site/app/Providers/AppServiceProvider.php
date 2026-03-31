@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Filament\Lunar\Extensions\OrderResourceExtension;
+use App\Filament\Lunar\Extensions\ProductInventoryExtension;
+use App\Filament\Lunar\Extensions\VariantInventoryExtension;
 use App\Modifiers\ShippingModifier;
 use App\Observers\OrderObserver;
 use App\Support\TemplateHelper;
@@ -29,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
 
         LunarPanel::extensions([
             \Lunar\Admin\Filament\Resources\OrderResource\Pages\ManageOrder::class => OrderResourceExtension::class,
+            \Lunar\Admin\Filament\Resources\ProductVariantResource\Pages\ManageVariantInventory::class => VariantInventoryExtension::class,
+            \Lunar\Admin\Filament\Resources\ProductResource\Pages\ManageProductInventory::class => ProductInventoryExtension::class,
         ]);
     }
 

@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Services\InventoryService;
 use App\Support\LandingSignature;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -501,16 +503,17 @@ class CheckoutPage extends Component
             return false;
         }
 
-        $this->cart->loadMissing('lines.purchasable');
+        $stockLines = $this->cart->lines
+            ->filter(fn ($line) => $this->isStockManagedLine($line))
+            ->values();
 
-        $requestedByPurchasable = [];
+        $stockLines->loadMissing('purchasable');
 
-        foreach ($this->cart->lines as $line) {
-            $key = $line->purchasable_type.':'.$line->purchasable_id;
-            $requestedByPurchasable[$key] = ($requestedByPurchasable[$key] ?? 0) + (int) $line->quantity;
-        }
+        $countryId = $this->shipping?->country_id
+            ?: $this->inventoryService()->resolveCountryIdForCart($this->cart);
+        $requestedByPurchasable = $this->inventoryService()->requestedByPurchasable($stockLines);
 
-        foreach ($this->cart->lines as $line) {
+        foreach ($stockLines as $line) {
             $purchasable = $line->purchasable;
 
             if (! $purchasable) {
@@ -521,12 +524,7 @@ class CheckoutPage extends Component
 
             $key = $line->purchasable_type.':'.$line->purchasable_id;
             $requested = (int) ($requestedByPurchasable[$key] ?? 0);
-            $available = match ($purchasable->purchasable) {
-                'always' => PHP_INT_MAX,
-                'in_stock' => max(0, (int) $purchasable->stock),
-                'in_stock_or_on_backorder' => max(0, (int) $purchasable->stock + (int) $purchasable->backorder),
-                default => 0,
-            };
+            $available = $this->inventoryService()->availableQuantityForPurchasable($purchasable, $countryId);
 
             if ($requested > $available) {
                 $this->paymentError = 'One or more items exceed available inventory. Please update your cart quantities.';
@@ -536,6 +534,29 @@ class CheckoutPage extends Component
         }
 
         return true;
+    }
+
+    protected function isStockManagedLine($line): bool
+    {
+        $type = (string) ($line->purchasable_type ?? '');
+
+        return $type !== '' && is_subclass_of($type, Model::class);
+    }
+
+    public function isLineOnBackorder($line): bool
+    {
+        $purchasable = $line->purchasable;
+
+        if (! $purchasable || $purchasable->purchasable !== 'in_stock_or_on_backorder') {
+            return false;
+        }
+
+        $countryId = $this->shipping?->country_id
+            ?: $this->inventoryService()->resolveCountryIdForCart($this->cart);
+
+        $inStock = $this->inventoryService()->inStockQuantityForPurchasable($purchasable, $countryId);
+
+        return (int) $line->quantity > $inStock;
     }
 
     /**
@@ -720,6 +741,11 @@ class CheckoutPage extends Component
         $customer->users()->syncWithoutDetaching([$user->id]);
 
         return $customer;
+    }
+
+    protected function inventoryService(): InventoryService
+    {
+        return app(InventoryService::class);
     }
 
     public function render(): View

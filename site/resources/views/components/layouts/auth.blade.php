@@ -12,10 +12,7 @@
         name="description"
         content="Customer account access for the Vital storefront."
     >
-    <link
-        href="{{ asset('css/app.css') }}"
-        rel="stylesheet"
-    >
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link
         href="{{ asset('css/theme.css') }}"
         rel="stylesheet"
@@ -24,6 +21,7 @@
         rel="icon"
         href="{{ asset('favicon.svg') }}"
     >
+    @livewireStyles
 </head>
 
 <body class="ves-theme antialiased">
@@ -50,6 +48,8 @@
     </main>
 
     <x-footer />
+
+    @livewireScripts
 </body>
 
 </html>

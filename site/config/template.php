@@ -86,4 +86,29 @@ return [
     | Usage: config('template.themes.' . config('template.active'))
     |
     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Storefront Countries
+    |--------------------------------------------------------------------------
+    |
+    | Countries available for storefront country switching. The first entry
+    | is used as the default for unauthenticated / new sessions.
+    | 'iso2' must match the Lunar countries table iso2 column.
+    |
+    */
+
+    'storefront_enabled_country_iso2' => ['AU', 'NZ'],
+
+    // Optional labels keyed by ISO2. Falls back to Lunar country names when missing.
+    'storefront_country_labels' => [
+        'AU' => 'Australia',
+        'NZ' => 'New Zealand',
+    ],
+
+    // Backward-compatibility structure; kept for existing callers.
+    'storefront_countries' => [
+        ['iso2' => 'AU', 'name' => 'Australia'],
+        ['iso2' => 'NZ', 'name' => 'New Zealand'],
+    ],
 ];

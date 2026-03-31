@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CountrySwitcherController;
 use App\Livewire\CheckoutPage;
 use App\Livewire\CheckoutSuccessPage;
 use App\Livewire\CollectionPage;
@@ -50,8 +51,10 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
 	->middleware('auth')
 	->name('logout');
 
-Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
-	Route::get('/', [AccountController::class, 'index'])->name('index');
+Route::post('country', [CountrySwitcherController::class, 'store'])
+	->name('country.switch');
+
+Route::middleware('auth')->group(function () {
 	Route::get('/orders', [AccountController::class, 'orders'])->name('orders');
 	Route::get('/orders/{order}', [AccountController::class, 'showOrder'])->name('orders.show');
 	Route::get('/address-book', [AccountController::class, 'addressBook'])->name('address-book');

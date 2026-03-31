@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
-use Lunar\Base\Traits\LunarUser;
 use Lunar\Base\LunarUser as LunarUserContract;
+use Lunar\Base\Traits\LunarUser;
+use Lunar\Models\Country;
 
 class User extends Authenticatable implements LunarUserContract
 {
@@ -23,6 +25,7 @@ class User extends Authenticatable implements LunarUserContract
         'name',
         'email',
         'password',
+        'country_id',
     ];
 
     /**
@@ -47,5 +50,10 @@ class User extends Authenticatable implements LunarUserContract
     public function addresses(): HasMany
     {
         return $this->hasMany(UserAddress::class);
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 }

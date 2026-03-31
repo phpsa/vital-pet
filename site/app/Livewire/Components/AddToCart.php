@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Components;
 
+use App\Services\InventoryService;
 use Illuminate\View\View;
 use Livewire\Component;
 use Lunar\Base\Purchasable;
@@ -32,54 +33,33 @@ class AddToCart extends Component
 
         $requestedQuantity = $this->quantity + $this->existingQuantityInCart();
 
-        // Check purchasability tier
-        if ($this->purchasable->purchasable === 'always') {
-            // No stock restrictions
-            CartSession::manager()->add($this->purchasable, $this->quantity);
-        } elseif ($this->purchasable->purchasable === 'in_stock') {
-            // Must have sufficient stock available
-            $availableStock = $this->purchasable->stock;
+        $countryId = $this->inventoryService()->resolveCountryIdForCart(CartSession::current());
+        $validation = $this->inventoryService()->validateRequestedQuantity(
+            $this->purchasable,
+            $requestedQuantity,
+            $countryId
+        );
 
-            if ($availableStock === 0) {
+        if (! $validation['ok']) {
+            if ($validation['available'] <= 0) {
                 $this->addError('quantity', 'This item is out of stock.');
-                return;
-            }
-
-            if ($availableStock < $requestedQuantity) {
+            } else {
                 $this->addError(
                     'quantity',
-                    "Only {$availableStock} item(s) in stock. You already have {$requestedQuantity} requested in your cart."
+                    "Only {$validation['available']} item(s) are available. You already have {$requestedQuantity} requested in your cart."
                 );
-                return;
             }
 
-            CartSession::manager()->add($this->purchasable, $this->quantity);
-        } elseif ($this->purchasable->purchasable === 'in_stock_or_on_backorder') {
-            // Check combined stock + backorder availability
-            $availableStock = $this->purchasable->stock;
-            $availableBackorder = $this->purchasable->backorder;
-            $totalAvailable = $availableStock + $availableBackorder;
-
-            if ($totalAvailable === 0) {
-                $this->addError('quantity', 'This item is out of stock and not available for backorder.');
-                return;
-            }
-
-            if ($totalAvailable < $requestedQuantity) {
-                $inStockText = $availableStock > 0 ? "{$availableStock} in stock" : 'none in stock';
-                $backorderText = $availableBackorder > 0 ? "{$availableBackorder} on backorder" : 'none on backorder';
-                $this->addError(
-                    'quantity',
-                    "Only {$totalAvailable} item(s) available ({$inStockText}, {$backorderText}). You already have {$requestedQuantity} requested in your cart."
-                );
-                return;
-            }
-
-            CartSession::manager()->add($this->purchasable, $this->quantity);
-        } else {
-            $this->addError('quantity', 'This item cannot be purchased at this time.');
             return;
         }
+
+        if (! in_array($this->purchasable->purchasable, ['always', 'in_stock', 'in_stock_or_on_backorder'], true)) {
+            $this->addError('quantity', 'This item cannot be purchased at this time.');
+
+            return;
+        }
+
+        CartSession::manager()->add($this->purchasable, $this->quantity);
 
         $this->dispatch('add-to-cart');
     }
@@ -101,5 +81,10 @@ class AddToCart extends Component
     public function render(): View
     {
         return view('livewire.components.add-to-cart');
+    }
+
+    protected function inventoryService(): InventoryService
+    {
+        return app(InventoryService::class);
     }
 }

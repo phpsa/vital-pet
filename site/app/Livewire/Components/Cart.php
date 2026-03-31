@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Components;
 
+use App\Services\InventoryService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -58,18 +60,22 @@ class Cart extends Component
         $this->resetErrorBag();
 
         $lineModelsById = $this->cartLines->keyBy('id');
-        $requestedByPurchasable = [];
-
-        foreach ($this->lines as $line) {
+        $countryId = $this->inventoryService()->resolveCountryIdForCart($this->cart);
+        $requestLines = collect($this->lines)->map(function ($line) use ($lineModelsById) {
             $lineModel = $lineModelsById->get($line['id']);
 
             if (! $lineModel) {
-                continue;
+                return null;
             }
 
-            $purchasableKey = $lineModel->purchasable_type.':'.$lineModel->purchasable_id;
-            $requestedByPurchasable[$purchasableKey] = ($requestedByPurchasable[$purchasableKey] ?? 0) + (int) $line['quantity'];
-        }
+            return [
+                'purchasable_type' => $lineModel->purchasable_type,
+                'purchasable_id' => $lineModel->purchasable_id,
+                'quantity' => (int) $line['quantity'],
+            ];
+        })->filter();
+
+        $requestedByPurchasable = $this->inventoryService()->requestedByPurchasable($requestLines);
 
         foreach ($this->lines as $index => $line) {
             $lineModel = $lineModelsById->get($line['id']);
@@ -81,7 +87,7 @@ class Cart extends Component
             $purchasable = $lineModel->purchasable;
             $purchasableKey = $lineModel->purchasable_type.':'.$lineModel->purchasable_id;
             $requestedQuantity = (int) ($requestedByPurchasable[$purchasableKey] ?? 0);
-            $availableQuantity = $this->availableQuantity($purchasable);
+            $availableQuantity = $this->inventoryService()->availableQuantityForPurchasable($purchasable, $countryId);
 
             if ($requestedQuantity > $availableQuantity) {
                 $this->addError(
@@ -116,12 +122,20 @@ class Cart extends Component
      */
     public function mapLines(): void
     {
-        $this->lines = $this->cartLines->map(function ($line) {
-            $isOnBackorder = false;
+        $countryId = $this->inventoryService()->resolveCountryIdForCart($this->cart);
 
-            if ($line->purchasable && $line->purchasable->purchasable === 'in_stock_or_on_backorder') {
-                $stock = max(0, (int) $line->purchasable->stock);
-                $isOnBackorder = (int) $line->quantity > $stock;
+        $this->lines = $this->cartLines->map(function ($line) use ($countryId) {
+            $isOnBackorder = false;
+            $isOutOfStock = false;
+
+            if ($line->purchasable) {
+                $available = $this->inventoryService()->availableQuantityForPurchasable($line->purchasable, $countryId);
+                $isOutOfStock = $available <= 0;
+
+                if (!$isOutOfStock && $line->purchasable->purchasable === 'in_stock_or_on_backorder') {
+                    $inStock = $this->inventoryService()->inStockQuantityForPurchasable($line->purchasable, $countryId);
+                    $isOnBackorder = (int) $line->quantity > $inStock;
+                }
             }
 
             return [
@@ -135,22 +149,9 @@ class Cart extends Component
                 'sub_total' => $line->subTotal->formatted(),
                 'unit_price' => $line->unitPrice->formatted(),
                 'on_backorder' => $isOnBackorder,
+                'out_of_stock' => $isOutOfStock,
             ];
         })->toArray();
-    }
-
-    protected function availableQuantity($purchasable): int
-    {
-        if (! $purchasable) {
-            return 0;
-        }
-
-        return match ($purchasable->purchasable) {
-            'always' => PHP_INT_MAX,
-            'in_stock' => max(0, (int) $purchasable->stock),
-            'in_stock_or_on_backorder' => max(0, (int) $purchasable->stock + (int) $purchasable->backorder),
-            default => 0,
-        };
     }
 
     public function handleAddToCart(): void
@@ -162,5 +163,17 @@ class Cart extends Component
     public function render(): View
     {
         return view('livewire.components.cart');
+    }
+
+    protected function inventoryService(): InventoryService
+    {
+        return app(InventoryService::class);
+    }
+
+    protected function isStockManagedLine($line): bool
+    {
+        $type = (string) ($line->purchasable_type ?? '');
+
+        return $type !== '' && is_subclass_of($type, Model::class);
     }
 }
