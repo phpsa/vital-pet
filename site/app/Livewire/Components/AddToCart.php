@@ -6,6 +6,7 @@ use App\Services\InventoryService;
 use Illuminate\View\View;
 use Livewire\Component;
 use Lunar\Base\Purchasable;
+use Lunar\Exceptions\Carts\CartException;
 use Lunar\Facades\CartSession;
 
 class AddToCart extends Component
@@ -59,7 +60,13 @@ class AddToCart extends Component
             return;
         }
 
-        CartSession::manager()->add($this->purchasable, $this->quantity);
+        try {
+            CartSession::manager()->add($this->purchasable, $this->quantity);
+        } catch (CartException $e) {
+            $this->addError('quantity', $e->getMessage() ?: 'This item cannot be added to the cart.');
+
+            return;
+        }
 
         $this->dispatch('add-to-cart');
     }
