@@ -127,7 +127,7 @@ return [
      * The path where to store temporary files while performing image conversions.
      * If set to null, storage_path('media-library/temp') will be used.
      */
-    'temporary_directory_path' => null,
+    'temporary_directory_path' => sys_get_temp_dir() . '/media-library-temp',
 
     /*
      * The engine that should perform the image conversions.
