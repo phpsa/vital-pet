@@ -142,7 +142,8 @@ class ProductPage extends Component
 
     public function render(): View
     {
-        return view('livewire.product-page');
+        return view('livewire.product-page')
+            ->title($this->product->translateAttribute('name'));
     }
 
     protected function inventoryService(): InventoryService

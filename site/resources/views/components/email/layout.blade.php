@@ -39,9 +39,19 @@
                     {{-- Header --}}
                     <tr>
                         <td align="center" style="padding-bottom:20px;">
-                            <span style="font-size:22px;font-weight:700;color:#111827;letter-spacing:-0.5px;text-decoration:none;">
-                                {{ config('app.name') }}
-                            </span>
+                            @php
+                                $emailLogoPath = app(\App\Settings\ContentSettings::class)->logo_path;
+                            @endphp
+                            @if ($emailLogoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($emailLogoPath))
+                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($emailLogoPath) }}"
+                                     alt="{{ config('app.name') }}"
+                                     width="160"
+                                     style="display:block;height:auto;max-height:60px;width:auto;max-width:200px;">
+                            @else
+                                <span style="font-size:22px;font-weight:700;color:#111827;letter-spacing:-0.5px;text-decoration:none;">
+                                    {{ config('app.name') }}
+                                </span>
+                            @endif
                         </td>
                     </tr>
 

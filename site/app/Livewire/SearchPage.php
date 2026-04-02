@@ -34,6 +34,7 @@ class SearchPage extends Component
 
     public function render(): View
     {
-        return view('livewire.search-page');
+        return view('livewire.search-page')
+            ->title('Search');
     }
 }

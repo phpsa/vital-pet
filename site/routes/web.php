@@ -11,6 +11,7 @@ use App\Livewire\CheckoutPage;
 use App\Livewire\CheckoutSuccessPage;
 use App\Livewire\CollectionPage;
 use App\Livewire\Home;
+use App\Livewire\LegalPage;
 use App\Livewire\ProductPage;
 use App\Livewire\SearchPage;
 use App\Http\Controllers\MockPaymentGatewayController;
@@ -98,3 +99,9 @@ Route::match(['GET', 'POST'], 'internal/checkout', SpecialLandingController::cla
 
 Route::match(['GET', 'POST'], 'internal/mock-gateway', MockPaymentGatewayController::class)
 	->name('landing.gateway.mock');
+
+// Legal pages
+Route::get('/terms', LegalPage::class)->defaults('page', 'terms')->name('legal.terms');
+Route::get('/privacy', LegalPage::class)->defaults('page', 'privacy')->name('legal.privacy');
+Route::get('/returns', LegalPage::class)->defaults('page', 'returns')->name('legal.returns');
+Route::get('/shipping-policy', LegalPage::class)->defaults('page', 'shipping')->name('legal.shipping');

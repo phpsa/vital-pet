@@ -7,11 +7,15 @@
         name="viewport"
         content="width=device-width, initial-scale=1"
     >
-    <title>Demo Storefront</title>
-    <meta
-        name="description"
-        content="Example of an ecommerce storefront built with Lunar."
-    >
+    @php
+        $seo = app(\App\Settings\ContentSettings::class);
+        $siteTitle = $seo->site_title ?: config('app.name');
+        $pageTitle = isset($title) && (string) $title !== '' ? (string) $title . ' — ' . $siteTitle : $siteTitle;
+    @endphp
+    <title>{{ $pageTitle }}</title>
+    @if ($seo->meta_description)
+        <meta name="description" content="{{ $seo->meta_description }}">
+    @endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link
         href="{{ asset('css/theme.css') }}"
@@ -25,7 +29,7 @@
     @airwallexScripts
 </head>
 
-<body class="ves-theme antialiased">
+<body class="ves-theme antialiased @if(\App\Support\TemplateHelper::isPetstore()) ves-petstore @endif">
     <header class="relative border-b border-gray-100 ves-nav">
         <div class="flex items-center h-16 px-4 mx-auto max-w-screen-2xl sm:px-6 lg:px-8">
             <a

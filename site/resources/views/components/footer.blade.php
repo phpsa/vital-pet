@@ -1,15 +1,34 @@
 <footer class="bg-gray-50 ves-footer">
+
+    <nav class="border-b border-gray-200 bg-gray-100 py-3 px-4">
+        <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
+            <li><a href="{{ route('legal.privacy') }}" wire:navigate class="hover:text-gray-800 transition-colors">Privacy Policy</a></li>
+            <li class="before:content-['·'] before:mr-6 before:text-gray-300"><a href="{{ route('legal.terms') }}" wire:navigate class="hover:text-gray-800 transition-colors">Terms &amp; Conditions</a></li>
+            <li class="before:content-['·'] before:mr-6 before:text-gray-300"><a href="{{ route('legal.returns') }}" wire:navigate class="hover:text-gray-800 transition-colors">Returns</a></li>
+            <li class="before:content-['·'] before:mr-6 before:text-gray-300"><a href="{{ route('legal.shipping') }}" wire:navigate class="hover:text-gray-800 transition-colors">Shipping</a></li>
+        </ul>
+    </nav>
+
     <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
+        @php
+            $contentSettings = app(\App\Settings\ContentSettings::class);
+        @endphp
+
         <x-brand.logo class="w-auto h-8 ves-logo" />
 
-        <p class="max-w-sm mt-4 text-gray-700">
-            Premium dog accessories, engaging toys, and nutritious treats curated for
-            active adventures, training moments, and everyday joy with your best friend.
+        @if ($contentSettings->footer_text)
+            <p class="max-w-sm mt-4 text-gray-700">
+                {{ $contentSettings->footer_text }}
+            </p>
+        @endif
+
+        @if(config('app.debug'))
+            
+        <p class="mt-3 text-xs tracking-[0.18em] uppercase text-gray-400">
+           DEBUG Template: {{ config('template.active') }}
         </p>
 
-        <p class="mt-3 text-xs tracking-[0.18em] uppercase text-gray-400">
-            Template: {{ config('template.active') }}
-        </p>
+        
 
         @php
             $countrySelectorEnabled = \App\Support\StorefrontCountry::isEnabled();
@@ -87,9 +106,17 @@
                 </div>
             </div>
         @endif
+        @endif
 
-        <p class="pt-4 mt-4 text-sm text-gray-500 border-t border-gray-100">
-            &copy; {{ now()->year }} Vital
-        </p>
+        <div class="pt-4 mt-4 border-t border-gray-100 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-gray-500">
+                &copy; {{ now()->year }} Vital
+                @if ($contentSettings->contact_email)
+                    &mdash; <a href="mailto:{{ $contentSettings->contact_email }}" class="hover:text-gray-700 transition-colors">{{ $contentSettings->contact_email }}</a>
+                @endif
+            </p>
+
+           
+        </div>
     </div>
 </footer>

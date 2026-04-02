@@ -7,11 +7,18 @@
         name="viewport"
         content="width=device-width, initial-scale=1"
     >
-    <title>{{ $title ?? 'Demo Storefront' }}</title>
-    <meta
-        name="description"
-        content="Example of an ecommerce storefront built with Lunar."
-    >
+    @php
+        $seo = app(\App\Settings\ContentSettings::class);
+        $siteTitle = $seo->site_title ?: config('app.name');
+        $pageTitle = isset($title) && (string) $title !== '' ? (string) $title . ' — ' . $siteTitle : $siteTitle;
+    @endphp
+    <title>{{ $pageTitle }}</title>
+    @if ($seo->meta_description)
+        <meta name="description" content="{{ $seo->meta_description }}">
+    @endif
+    @if ($seo->meta_keywords)
+        <meta name="keywords" content="{{ $seo->meta_keywords }}">
+    @endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link
         href="{{ asset('css/theme.css') }}"
@@ -25,7 +32,8 @@
     @livewireStyles
 </head>
 
-<body class="ves-theme antialiased">
+<body class="ves-theme antialiased @if(\App\Support\TemplateHelper::isPetstore()) ves-petstore @endif">
+    <x-announcement-banner />
     @livewire('components.navigation')
 
     <main>
