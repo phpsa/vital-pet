@@ -37,24 +37,22 @@ class InventoryService
         $globalStock = max(0, (int) $purchasable->stock);
         $globalBackorder = max(0, (int) $purchasable->backorder);
 
-        $regionalStock = 0;
-        $regionalBackorder = 0;
-
-        if ($countryId && $this->regionalStockEnabled($purchasable)) {
-            $regional = $this->regionalRow($purchasable, $countryId);
-
-            if ($regional) {
-                $regionalStock = max(0, (int) $regional->stock);
-                $regionalBackorder = max(0, (int) $regional->backorder);
-            }
-        }
-
         if ($purchasable->purchasable === 'in_stock') {
             return $this->inStockQuantityForPurchasable($purchasable, $countryId);
         }
 
         if ($purchasable->purchasable === 'in_stock_or_on_backorder') {
-            return $globalStock + $globalBackorder + $regionalStock + $regionalBackorder;
+            if ($this->regionalStockEnabled($purchasable)) {
+                if (! $countryId) {
+                    return 0;
+                }
+
+                $regional = $this->regionalRow($purchasable, $countryId);
+
+                return $regional ? max(0, (int) $regional->stock) + max(0, (int) $regional->backorder) : 0;
+            }
+
+            return $globalStock + $globalBackorder;
         }
 
         return 0;
@@ -71,17 +69,18 @@ class InventoryService
         }
 
         $globalStock = max(0, (int) $purchasable->stock);
-        $regionalStock = 0;
 
-        if ($countryId && $this->regionalStockEnabled($purchasable)) {
+        if ($this->regionalStockEnabled($purchasable)) {
+            if (! $countryId) {
+                return 0;
+            }
+
             $regional = $this->regionalRow($purchasable, $countryId);
 
-            if ($regional) {
-                $regionalStock = max(0, (int) $regional->stock);
-            }
+            return $regional ? max(0, (int) $regional->stock) : 0;
         }
 
-        return $globalStock + $regionalStock;
+        return $globalStock;
     }
 
     public function validateRequestedQuantity($purchasable, int $requestedQuantity, ?int $countryId = null): array
@@ -207,8 +206,9 @@ class InventoryService
             $globalBackorderAllocated = 0;
 
             $regional = null;
+            $regionalEnabled = $this->regionalStockEnabled($purchasable);
 
-            if ($countryId && $this->regionalStockEnabled($purchasable)) {
+            if ($countryId && $regionalEnabled) {
                 $regional = $this->regionalRow($purchasable, $countryId);
             }
 
@@ -222,7 +222,7 @@ class InventoryService
                 }
             }
 
-            if ($remaining > 0) {
+            if ($remaining > 0 && ! $regionalEnabled) {
                 $allocate = min(max(0, (int) $purchasable->stock), $remaining);
 
                 if ($allocate > 0) {
@@ -243,7 +243,7 @@ class InventoryService
                     }
                 }
 
-                if ($remaining > 0) {
+                if ($remaining > 0 && ! $regionalEnabled) {
                     $allocate = min(max(0, (int) $purchasable->backorder), $remaining);
 
                     if ($allocate > 0) {
@@ -304,17 +304,21 @@ class InventoryService
     {
         $globalBackorder = max(0, (int) $purchasable->backorder);
 
-        if (! $countryId || ! $this->regionalStockEnabled($purchasable)) {
+        if (! $this->regionalStockEnabled($purchasable)) {
             return $globalBackorder > 0;
+        }
+
+        if (! $countryId) {
+            return false;
         }
 
         $regional = $this->regionalRow($purchasable, $countryId);
 
         if (! $regional) {
-            return $globalBackorder > 0;
+            return false;
         }
 
-        return $globalBackorder > 0 || max(0, (int) $regional->backorder) > 0;
+        return max(0, (int) $regional->backorder) > 0;
     }
 
     protected function isStockManagedLine($line): bool
