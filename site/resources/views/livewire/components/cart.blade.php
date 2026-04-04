@@ -153,6 +153,10 @@
                         <p class="block w-full p-3 text-sm font-medium text-center text-red-700 bg-red-50 rounded-lg border border-red-200">
                             Remove out-of-stock items to checkout
                         </p>
+                    @elseif ($this->belowMinOrder)
+                        <p class="block w-full p-3 text-sm font-medium text-center text-amber-800 bg-amber-50 rounded-lg border border-amber-200">
+                            Minimum order is {{ $this->formattedMinOrder }}
+                        </p>
                     @else
                         <a class="block w-full p-3 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-gray-900"
                            href="{{ route('checkout.view') }}"

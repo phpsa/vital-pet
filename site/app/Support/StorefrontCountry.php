@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Settings\OrderSettings;
 use Illuminate\Support\Facades\Auth;
 use Lunar\Models\Country;
 
@@ -110,21 +111,33 @@ class StorefrontCountry
 
     public static function isEnabled(): bool
     {
-        if (! config()->has('template.storefront_enabled_country_iso2')) {
-            return collect(config('template.storefront_countries', []))->isNotEmpty();
-        }
-
-        $raw = config('template.storefront_enabled_country_iso2');
-
-        if ($raw === null || $raw === false) {
-            return false;
-        }
-
         return static::configuredIso2s()->isNotEmpty();
     }
 
     /**
-     * Return the allowed country IDs from config.
+     * Return the enabled ISO2 codes as a plain array.
+     */
+    public static function enabledIso2s(): array
+    {
+        return static::configuredIso2s()->values()->toArray();
+    }
+
+    /**
+     * Return the first enabled country as a Country model, or null.
+     */
+    public static function defaultCountry(): ?Country
+    {
+        $iso2 = static::configuredIso2s()->first();
+
+        if (! $iso2) {
+            return null;
+        }
+
+        return Country::where('iso2', $iso2)->first();
+    }
+
+    /**
+     * Return the allowed country IDs from settings/config.
      */
     public static function allowedCountryIds(): array
     {
@@ -146,7 +159,6 @@ class StorefrontCountry
     public static function allowedCountries(): \Illuminate\Support\Collection
     {
         $iso2s = static::configuredIso2s();
-        $labels = collect(config('template.storefront_country_labels', []));
 
         if ($iso2s->isEmpty()) {
             return collect();
@@ -157,7 +169,7 @@ class StorefrontCountry
             ->map(fn ($c) => [
                 'id'   => (int) $c->id,
                 'iso2' => $c->iso2,
-                'name' => (string) ($labels->get($c->iso2) ?: $c->name),
+                'name' => (string) $c->name,
             ])
             ->sortBy(fn ($c) => $iso2s->search($c['iso2']))
             ->values();
@@ -165,31 +177,36 @@ class StorefrontCountry
 
     protected static function configuredIso2s(): \Illuminate\Support\Collection
     {
-        if (config()->has('template.storefront_enabled_country_iso2')) {
-            $raw = config('template.storefront_enabled_country_iso2');
+        // Read from settings first (primary source).
+        // If the settings class loads successfully we always use its value — even an
+        // empty array means "no restrictions" and we must NOT fall back to config.
+        try {
+            $settings = app(OrderSettings::class);
+            $iso2s = $settings->storefront_country_iso2 ?? null;
 
-            if ($raw === null || $raw === false) {
-                return collect();
+            if (is_array($iso2s)) {
+                return collect($iso2s)
+                    ->map(fn ($iso2) => strtoupper((string) $iso2))
+                    ->filter()
+                    ->unique()
+                    ->values();
             }
+        } catch (\Throwable) {
+            // Settings table not available yet (e.g. during initial migration); fall through.
+        }
 
-            return collect((array) $raw)
+        // Fallback: read from config (only reached when settings are unavailable).
+        $raw = config('template.storefront_enabled_country_iso2');
+
+        if (is_array($raw) && ! empty($raw)) {
+            return collect($raw)
                 ->map(fn ($iso2) => strtoupper((string) $iso2))
                 ->filter()
                 ->unique()
                 ->values();
         }
 
-        $enabled = collect(config('template.storefront_enabled_country_iso2', []))
-            ->map(fn ($iso2) => strtoupper((string) $iso2))
-            ->filter()
-            ->unique()
-            ->values();
-
-        if ($enabled->isNotEmpty()) {
-            return $enabled;
-        }
-
-        // Backward compatibility with the old structure when the new key is missing.
+        // Last resort: old storefront_countries structure.
         return collect(config('template.storefront_countries', []))
             ->pluck('iso2')
             ->map(fn ($iso2) => strtoupper((string) $iso2))

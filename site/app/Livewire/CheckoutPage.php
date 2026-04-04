@@ -3,7 +3,9 @@
 namespace App\Livewire;
 
 use App\Services\InventoryService;
+use App\Settings\OrderSettings;
 use App\Support\LandingSignature;
+use App\Support\StorefrontCountry;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -180,7 +182,7 @@ class CheckoutPage extends Component
 
         $this->billing = $this->cart->billingAddress ?: new CartAddress;
 
-        if ($defaultCountry = Country::firstWhere('iso3', 'AUS')) {
+        if ($defaultCountry = StorefrontCountry::defaultCountry()) {
             if (! $this->shipping->country_id) {
                 $this->shipping->country_id = $defaultCountry->id;
             }
@@ -222,7 +224,7 @@ class CheckoutPage extends Component
 
         $this->shipping = new CartAddress;
 
-        if ($defaultCountry = Country::firstWhere('iso3', 'AUS')) {
+        if ($defaultCountry = StorefrontCountry::defaultCountry()) {
             $this->shipping->country_id = $defaultCountry->id;
         }
     }
@@ -564,7 +566,11 @@ class CheckoutPage extends Component
      */
     public function getCountriesProperty(): Collection
     {
-        return Country::whereIn('iso3', ['AUS', 'NZL'])->get();
+        $iso2s = StorefrontCountry::enabledIso2s();
+
+        return empty($iso2s)
+            ? Country::orderBy('name')->get()
+            : Country::whereIn('iso2', $iso2s)->get();
     }
 
     public function getUserAddressBookProperty(): Collection
@@ -746,6 +752,29 @@ class CheckoutPage extends Component
     protected function inventoryService(): InventoryService
     {
         return app(InventoryService::class);
+    }
+
+    public function getBelowMinOrderProperty(): bool
+    {
+        $min = app(OrderSettings::class)->min_order_value ?? 0;
+
+        if ($min <= 0 || ! $this->cart) {
+            return false;
+        }
+
+        $decimalPlaces = $this->cart->currency?->decimal_places ?? 2;
+        $minInLowest = (int) round($min * pow(10, $decimalPlaces));
+
+        return ($this->cart->subTotal?->value ?? 0) < $minInLowest;
+    }
+
+    public function getFormattedMinOrderProperty(): string
+    {
+        $min = app(OrderSettings::class)->min_order_value ?? 0;
+        $symbol = $this->cart?->currency?->symbol ?? '£';
+        $dp = $this->cart?->currency?->decimal_places ?? 2;
+
+        return $symbol . number_format($min, $dp);
     }
 
     public function render(): View

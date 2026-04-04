@@ -8,6 +8,7 @@ return [
      */
     'settings' => [
         App\Settings\ContentSettings::class,
+        App\Settings\OrderSettings::class,
     ],
 
     /*

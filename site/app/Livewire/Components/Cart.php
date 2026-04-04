@@ -3,6 +3,7 @@
 namespace App\Livewire\Components;
 
 use App\Services\InventoryService;
+use App\Settings\OrderSettings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -163,6 +164,33 @@ class Cart extends Component
     public function render(): View
     {
         return view('livewire.components.cart');
+    }
+
+    public function getMinOrderValueProperty(): float
+    {
+        return app(OrderSettings::class)->min_order_value ?? 0;
+    }
+
+    public function getBelowMinOrderProperty(): bool
+    {
+        $min = $this->minOrderValue;
+
+        if ($min <= 0 || ! $this->cart) {
+            return false;
+        }
+
+        $decimalPlaces = $this->cart->currency?->decimal_places ?? 2;
+        $minInLowest = (int) round($min * pow(10, $decimalPlaces));
+
+        return ($this->cart->subTotal?->value ?? 0) < $minInLowest;
+    }
+
+    public function getFormattedMinOrderProperty(): string
+    {
+        $symbol = $this->cart?->currency?->symbol ?? '£';
+        $dp = $this->cart?->currency?->decimal_places ?? 2;
+
+        return $symbol . number_format($this->minOrderValue, $dp);
     }
 
     protected function inventoryService(): InventoryService

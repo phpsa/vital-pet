@@ -88,6 +88,14 @@
             </div>
 
             <div class="space-y-6 lg:col-span-2">
+                @if ($this->belowMinOrder)
+                    <section class="bg-amber-50 border border-amber-200 rounded-xl p-6">
+                        <p class="text-sm font-medium text-amber-800">
+                            A minimum order of {{ $this->formattedMinOrder }} is required to checkout.
+                            Please add more items to your cart to continue.
+                        </p>
+                    </section>
+                @else
                 @guest
                     <section class="bg-white border border-gray-100 rounded-xl">
                         <div class="flex items-center h-16 px-6 border-b border-gray-100">
@@ -129,6 +137,7 @@
                 @include('partials.checkout.payment', [
                     'step' => $steps['payment'],
                 ])
+                @endif
             </div>
         </div>
     </div>

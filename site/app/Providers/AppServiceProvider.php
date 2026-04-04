@@ -7,6 +7,7 @@ use App\Filament\Lunar\Extensions\OrderResourceExtension;
 use App\Filament\Lunar\Extensions\ProductInventoryExtension;
 use App\Filament\Lunar\Extensions\VariantInventoryExtension;
 use App\Filament\Lunar\Pages\ContentSettingsPage;
+use App\Filament\Lunar\Pages\OrderSettingsPage;
 use App\Filament\Lunar\Resources\InvitationResource;
 use App\Filament\Lunar\Resources\ReferralResource;
 use App\Modifiers\ShippingModifier;
@@ -34,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
                 ReferralResource::class,
             ])->pages([
                 ContentSettingsPage::class,
+                OrderSettingsPage::class,
             ])
         )
             ->register();

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use App\Support\StorefrontCountry;
 use Lunar\Models\Country;
 use Lunar\Models\Order;
 
@@ -99,7 +100,12 @@ class AccountController extends Controller
         return view('account.address-book', [
             'activeTab' => 'address-book',
             'addresses' => $user->addresses()->with('country')->orderByDesc('is_default')->latest()->get(),
-            'countries' => Country::whereIn('iso3', ['AUS', 'NZL'])->get(),
+            'countries' => (function () {
+                $iso2s = StorefrontCountry::enabledIso2s();
+                return empty($iso2s)
+                    ? Country::orderBy('name')->get()
+                    : Country::whereIn('iso2', $iso2s)->orderBy('name')->get();
+            })(),
             'editingAddress' => $editingAddress,
         ]);
     }
