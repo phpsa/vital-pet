@@ -27,6 +27,7 @@ class User extends Authenticatable implements LunarUserContract
         'password',
         'country_id',
         'referred_by_id',
+        'banned_at',
     ];
 
     /**
@@ -46,7 +47,13 @@ class User extends Authenticatable implements LunarUserContract
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'banned_at'         => 'datetime',
     ];
+
+    public function isBanned(): bool
+    {
+        return $this->banned_at !== null;
+    }
 
     public function addresses(): HasMany
     {

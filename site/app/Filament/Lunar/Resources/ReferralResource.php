@@ -8,6 +8,7 @@ use App\Models\User;
 use Filament\Forms\Form;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -45,6 +46,14 @@ class ReferralResource extends Resource
                     Infolists\Components\TextEntry::make('created_at')
                         ->label('Registered')
                         ->dateTime('d M Y H:i'),
+                    Infolists\Components\IconEntry::make('banned_at')
+                        ->label('Banned')
+                        ->boolean()
+                        ->trueIcon('heroicon-o-no-symbol')
+                        ->falseIcon('heroicon-o-check-circle')
+                        ->trueColor('danger')
+                        ->falseColor('success')
+                        ->getStateUsing(fn (User $record) => $record->isBanned()),
                 ]),
 
             Infolists\Components\Section::make('Referred By')
@@ -98,6 +107,15 @@ class ReferralResource extends Resource
                     ->counts('referrals')
                     ->sortable(),
 
+                Tables\Columns\IconColumn::make('banned_at')
+                    ->label('Banned')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-no-symbol')
+                    ->falseIcon('heroicon-o-minus')
+                    ->trueColor('danger')
+                    ->falseColor('gray')
+                    ->getStateUsing(fn (User $record) => $record->isBanned()),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Joined')
                     ->dateTime('d M Y')
@@ -111,10 +129,44 @@ class ReferralResource extends Resource
                 Tables\Filters\Filter::make('has_referrals')
                     ->label('Has referred others')
                     ->query(fn ($query) => $query->has('referrals')),
+
+                Tables\Filters\Filter::make('banned')
+                    ->label('Banned')
+                    ->query(fn ($query) => $query->whereNotNull('banned_at')),
             ])
             ->defaultSort('created_at', 'desc')
             ->actions([
                 Tables\Actions\ViewAction::make(),
+
+                Tables\Actions\Action::make('ban')
+                    ->label('Ban')
+                    ->icon('heroicon-o-no-symbol')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->visible(fn (User $record) => ! $record->isBanned())
+                    ->action(function (User $record): void {
+                        $record->update(['banned_at' => now()]);
+
+                        Notification::make()
+                            ->success()
+                            ->title('User banned')
+                            ->send();
+                    }),
+
+                Tables\Actions\Action::make('unban')
+                    ->label('Unban')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->visible(fn (User $record) => $record->isBanned())
+                    ->action(function (User $record): void {
+                        $record->update(['banned_at' => null]);
+
+                        Notification::make()
+                            ->success()
+                            ->title('User unbanned')
+                            ->send();
+                    }),
             ])
             ->bulkActions([]);
     }

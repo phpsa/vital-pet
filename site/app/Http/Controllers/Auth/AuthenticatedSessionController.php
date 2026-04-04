@@ -41,6 +41,16 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
+        if (Auth::user()->isBanned()) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            throw ValidationException::withMessages([
+                'email' => trans('auth.banned'),
+            ]);
+        }
+
         $request->session()->regenerate();
 
         StorefrontCountry::syncFromUser(Auth::user());
