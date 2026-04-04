@@ -18,9 +18,13 @@ class OrderObserver
     {
         $this->reduceStockWhenPlaced($order);
 
+        // Capture this BEFORE markAsDispatchedWhenTrackingAdded, because that method calls
+        // updateQuietly() which resets $order->changes and makes wasChanged() return false.
+        $shouldSendShippedEmail = $this->shouldSendShippedEmail($order);
+
         $this->markAsDispatchedWhenTrackingAdded($order);
 
-        if (! $this->shouldSendShippedEmail($order)) {
+        if (! $shouldSendShippedEmail) {
             return;
         }
 
