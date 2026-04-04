@@ -21,6 +21,7 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.0",
         "lunarphp/lunar": "^1.3",
+        "lunarphp/paypal": "^1.3",
         "lunarphp/stripe": "^1.3",
         "lunarphp/table-rate-shipping": "^1.3",
         "predis/predis": "^2.2",

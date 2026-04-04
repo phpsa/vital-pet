@@ -15,6 +15,7 @@ use App\Livewire\LegalPage;
 use App\Livewire\ProductPage;
 use App\Livewire\SearchPage;
 use App\Http\Controllers\MockPaymentGatewayController;
+use App\Http\Controllers\PaypalReturnController;
 use App\Http\Controllers\SpecialLandingController;
 use Illuminate\Support\Facades\Route;
 
@@ -92,6 +93,8 @@ Route::middleware('storefront.auth_lock')->group(function () {
 
 	Route::get('checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
 });
+
+Route::get('/paypal/return', PaypalReturnController::class)->name('paypal.return');
 
 Route::match(['GET', 'POST'], 'internal/checkout', SpecialLandingController::class)
 	->middleware('external.signed')

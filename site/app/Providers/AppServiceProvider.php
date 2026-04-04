@@ -13,6 +13,7 @@ use App\Filament\Lunar\Resources\InvitationResource;
 use App\Filament\Lunar\Resources\ReferralResource;
 use App\Modifiers\ShippingModifier;
 use App\Observers\OrderObserver;
+use App\Services\PaypalService;
 use App\Support\TemplateHelper;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -72,6 +73,12 @@ class AppServiceProvider extends ServiceProvider
         );
 
         \Lunar\Models\Order::observe(OrderObserver::class);
+
+        // Override the PayPal service with our corrected experience_context payload structure.
+        // Must be in boot() so it runs after PaypalServiceProvider::boot() which also binds this interface.
+        $this->app->singleton(\Lunar\Paypal\PaypalInterface::class, function ($app) {
+            return $app->make(PaypalService::class);
+        });
     }
 
     /**

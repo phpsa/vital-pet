@@ -54,5 +54,10 @@ return [
     'store' => [
         'admin_email' => env('STORE_ADMIN_EMAIL', env('MAIL_FROM_ADDRESS')),
     ],
+    'paypal' => [
+        'env' => env('PAYPAL_ENV', 'sandbox'),
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'secret' => env('PAYPAL_SECRET'),
+    ],
 
 ];

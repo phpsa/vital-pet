@@ -810,6 +810,12 @@ class CheckoutPage extends Component
         return count($this->availablePaymentTypes) > 1;
     }
 
+    public function getIsPaypalEnabledProperty(): bool
+    {
+        return filled((string) config('services.paypal.client_id'))
+            && filled((string) config('services.paypal.secret'));
+    }
+
     public function getAvailablePaymentTypesProperty(): array
     {
         $types = [];
@@ -820,6 +826,10 @@ class CheckoutPage extends Component
 
         if ($this->isSendingGatewayEnabled) {
             $types[] = 'sending';
+        }
+
+        if ($this->isPaypalEnabled) {
+            $types[] = 'paypal';
         }
 
         return $types;
