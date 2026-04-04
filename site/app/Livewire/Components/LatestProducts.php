@@ -6,6 +6,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Product;
 
 class LatestProducts extends Component
@@ -14,7 +15,8 @@ class LatestProducts extends Component
 
     public function getProductsProperty(): LengthAwarePaginator
     {
-        return Product::with([
+        return Product::customerGroup(StorefrontSession::getCustomerGroups())
+            ->with([
             'defaultUrl',
             'thumbnail',
             'variants.basePrices.currency',

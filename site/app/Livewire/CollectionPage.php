@@ -6,7 +6,9 @@ use App\Traits\FetchesUrls;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
+use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Collection as CollectionModel;
+use Lunar\Models\Product;
 
 class CollectionPage extends Component
 {
@@ -48,7 +50,14 @@ class CollectionPage extends Component
      */
     public function getProductsProperty(): Collection
     {
-        $products = $this->collection->products;
+        $allProducts = $this->collection->products;
+
+        $groups = StorefrontSession::getCustomerGroups();
+        $visibleIds = Product::customerGroup($groups)
+            ->whereIn('id', $allProducts->pluck('id'))
+            ->pluck('id');
+
+        $products = $allProducts->filter(fn ($p) => $visibleIds->contains($p->id))->values();
 
         return match ($this->sort) {
             'price_low' => $products->sortBy(fn ($product) => $this->getSortablePrice($product))->values(),

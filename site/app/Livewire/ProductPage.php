@@ -8,6 +8,7 @@ use App\Traits\FetchesUrls;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
+use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Product;
 use Lunar\Models\ProductVariant;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -42,6 +43,12 @@ class ProductPage extends Component
         );
 
         if (! $this->url) {
+            abort(404);
+        }
+
+        // Enforce customer group visibility.
+        $groups = StorefrontSession::getCustomerGroups();
+        if (! Product::customerGroup($groups)->where('id', $this->url->element_id)->exists()) {
             abort(404);
         }
 
