@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Lunar\Models\CustomerGroup;
 
 class InvitationResource extends Resource
 {
@@ -65,6 +66,12 @@ class InvitationResource extends Resource
                 Tables\Columns\TextColumn::make('invitedByUser.name')
                     ->label('Invited By')
                     ->default('Staff')
+                    ->sortable(false),
+
+                Tables\Columns\TextColumn::make('customerGroup.name')
+                    ->label('Target Group')
+                    ->default('—')
+                    ->badge()
                     ->sortable(false),
 
                 Tables\Columns\BadgeColumn::make('status')

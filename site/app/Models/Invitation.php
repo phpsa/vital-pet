@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
+use Lunar\Models\CustomerGroup;
 
 class Invitation extends Model
 {
@@ -13,6 +14,7 @@ class Invitation extends Model
         'token',
         'invited_by_user_id',
         'is_staff_invite',
+        'customer_group_id',
         'used_at',
         'expires_at',
     ];
@@ -23,13 +25,14 @@ class Invitation extends Model
         'expires_at'      => 'datetime',
     ];
 
-    public static function generate(string $email, ?int $invitedByUserId, bool $isStaffInvite = false): self
+    public static function generate(string $email, ?int $invitedByUserId, bool $isStaffInvite = false, ?int $customerGroupId = null): self
     {
         return self::create([
             'email'               => $email,
             'token'               => Str::random(48),
             'invited_by_user_id'  => $invitedByUserId,
             'is_staff_invite'     => $isStaffInvite,
+            'customer_group_id'   => $customerGroupId,
             'expires_at'          => now()->addDays(7),
         ]);
     }
@@ -57,5 +60,10 @@ class Invitation extends Model
     public function invitedByUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'invited_by_user_id');
+    }
+
+    public function customerGroup(): BelongsTo
+    {
+        return $this->belongsTo(CustomerGroup::class, 'customer_group_id');
     }
 }

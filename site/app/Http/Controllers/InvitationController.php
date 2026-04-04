@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Listeners\ProvisionCustomerOnRegistration;
 use App\Mail\InvitationMail;
 use App\Models\Invitation;
 use App\Models\User;
@@ -106,7 +107,8 @@ class InvitationController extends Controller
         $showCountrySelector = StorefrontCountry::isEnabled();
 
         $validated = $request->validate([
-            'name'       => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name'  => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password'   => ['required', 'confirmed', Rules\Password::defaults()],
             'country_id' => $showCountrySelector
@@ -120,7 +122,7 @@ class InvitationController extends Controller
             : $invitation->invited_by_user_id;
 
         $user = User::create([
-            'name'           => $validated['name'],
+            'name'           => trim($validated['first_name'].' '.$validated['last_name']),
             'email'          => $validated['email'],
             'password'       => Hash::make($validated['password']),
             'country_id'     => $showCountrySelector ? (int) $validated['country_id'] : null,
@@ -130,6 +132,13 @@ class InvitationController extends Controller
         $invitation->markUsed();
 
         event(new Registered($user));
+
+        app(ProvisionCustomerOnRegistration::class)->provision(
+            user: $user,
+            firstName: $validated['first_name'],
+            lastName: $validated['last_name'],
+            invitation: $invitation,
+        );
 
         Auth::login($user);
 

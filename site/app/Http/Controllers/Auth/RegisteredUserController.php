@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Listeners\ProvisionCustomerOnRegistration;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Support\StorefrontCountry;
@@ -44,7 +45,8 @@ class RegisteredUserController extends Controller
         $showCountrySelector = StorefrontCountry::isEnabled();
 
         $validated = $request->validate([
-            'name'       => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name'  => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password'   => ['required', 'confirmed', Rules\Password::defaults()],
             'country_id' => $showCountrySelector
@@ -53,13 +55,19 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::query()->create([
-            'name'       => $validated['name'],
+            'name'       => trim($validated['first_name'].' '.$validated['last_name']),
             'email'      => $validated['email'],
             'password'   => Hash::make($validated['password']),
             'country_id' => $showCountrySelector ? (int) $validated['country_id'] : null,
         ]);
 
         event(new Registered($user));
+
+        app(ProvisionCustomerOnRegistration::class)->provision(
+            user: $user,
+            firstName: $validated['first_name'],
+            lastName: $validated['last_name'],
+        );
 
         Auth::login($user);
 

@@ -187,7 +187,7 @@ class Cart extends Component
 
     public function getFormattedMinOrderProperty(): string
     {
-        $symbol = $this->cart?->currency?->symbol ?? '£';
+        $symbol = $this->cart?->currency?->symbol ?? '$';
         $dp = $this->cart?->currency?->decimal_places ?? 2;
 
         return $symbol . number_format($this->minOrderValue, $dp);

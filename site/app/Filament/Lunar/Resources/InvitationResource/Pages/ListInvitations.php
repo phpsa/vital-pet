@@ -9,10 +9,12 @@ use App\Mail\InvitationMail;
 use App\Models\Invitation;
 use App\Models\User;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\Mail;
+use Lunar\Models\CustomerGroup;
 
 class ListInvitations extends ListRecords
 {
@@ -46,12 +48,20 @@ class ListInvitations extends ListRecords
                                 }
                             },
                         ]),
+
+                    Select::make('customer_group_id')
+                        ->label('Assign to customer group')
+                        ->placeholder('Default group (no restriction)')
+                        ->options(fn () => CustomerGroup::where('default', false)->orderBy('name')->pluck('name', 'id'))
+                        ->nullable()
+                        ->searchable(),
                 ])
                 ->action(function (array $data): void {
                     $invitation = Invitation::generate(
                         email: $data['email'],
                         invitedByUserId: null,
                         isStaffInvite: true,
+                        customerGroupId: $data['customer_group_id'] ?? null,
                     );
 
                     Mail::to($data['email'])->send(new InvitationMail($invitation));

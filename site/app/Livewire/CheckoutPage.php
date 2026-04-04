@@ -771,7 +771,7 @@ class CheckoutPage extends Component
     public function getFormattedMinOrderProperty(): string
     {
         $min = app(OrderSettings::class)->min_order_value ?? 0;
-        $symbol = $this->cart?->currency?->symbol ?? '£';
+        $symbol = $this->cart?->currency?->symbol ?? '$';
         $dp = $this->cart?->currency?->decimal_places ?? 2;
 
         return $symbol . number_format($min, $dp);

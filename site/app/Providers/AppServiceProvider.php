@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Filament\Lunar\Extensions\CustomerListExtension;
 use App\Filament\Lunar\Extensions\OrderListExtension;
 use App\Filament\Lunar\Extensions\OrderResourceExtension;
 use App\Filament\Lunar\Extensions\ProductInventoryExtension;
@@ -41,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
             ->register();
 
         LunarPanel::extensions([
+            \Lunar\Admin\Filament\Resources\CustomerResource::class => CustomerListExtension::class,
             \Lunar\Admin\Filament\Resources\OrderResource\Pages\ManageOrder::class => OrderResourceExtension::class,
             \Lunar\Admin\Filament\Resources\OrderResource::class => OrderListExtension::class,
             \Lunar\Admin\Filament\Resources\ProductVariantResource\Pages\ManageVariantInventory::class => VariantInventoryExtension::class,

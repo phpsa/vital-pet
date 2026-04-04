@@ -13,15 +13,27 @@
         @csrf
 
         <label class="ves-auth-field">
-            <span>Full name</span>
-            <input name="name"
+            <span>First name</span>
+            <input name="first_name"
                    type="text"
-                   value="{{ old('name') }}"
+                   value="{{ old('first_name') }}"
                    required
                    autofocus
-                   autocomplete="name">
+                   autocomplete="given-name">
         </label>
-        @error('name')
+        @error('first_name')
+            <p class="ves-auth-error">{{ $message }}</p>
+        @enderror
+
+        <label class="ves-auth-field">
+            <span>Last name</span>
+            <input name="last_name"
+                   type="text"
+                   value="{{ old('last_name') }}"
+                   required
+                   autocomplete="family-name">
+        </label>
+        @error('last_name')
             <p class="ves-auth-error">{{ $message }}</p>
         @enderror
 
