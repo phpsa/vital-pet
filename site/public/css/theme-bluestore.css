@@ -1,0 +1,214 @@
+/* ============================================================
+   BLUE STORE THEME
+   Violet-Blue #5224E0 · Black #0d0918 · White #ffffff
+   ============================================================ */
+
+.ves-bluestore {
+    --ves-bg: #ffffff;
+    --ves-bg-soft: #fafafa;
+    --ves-panel: #ffffff;
+    --ves-line: #e8e8e8;
+    --ves-line-strong: #cccccc;
+    --ves-text: #0d0d0d;
+    --ves-muted: #5a5a5a;
+    --ves-accent: #5224e0;
+    --ves-accent-ink: #ffffff;
+    --ves-header: #0d0918;
+}
+
+body.ves-bluestore {
+    background: #ffffff;
+}
+
+/* Headings — classic serif */
+.ves-bluestore h1,
+.ves-bluestore h2,
+.ves-bluestore h3 {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.04em;
+}
+
+.ves-bluestore .ves-serif {
+    font-family: 'Cinzel', serif;
+}
+
+/* Kicker */
+.ves-bluestore .ves-kicker {
+    border-color: rgba(82, 36, 224, 0.4);
+    color: #5224e0;
+}
+
+/* Announcement banner */
+.ves-bluestore .ves-announcement-bar {
+    background: #5224e0;
+    color: #ffffff;
+}
+
+/* ---- Navigation ---- */
+.ves-bluestore .ves-nav {
+    background: linear-gradient(180deg, #f5f4fa 0%, #eeecf7 100%);
+    border-bottom-color: #d8d4eb;
+}
+
+.ves-bluestore .ves-nav .ves-logo {
+    color: #5224e0;
+}
+
+.ves-bluestore .ves-nav .ves-nav-link {
+    color: #2a2540;
+}
+
+.ves-bluestore .ves-nav .ves-nav-link:hover {
+    color: #5224e0;
+}
+
+.ves-bluestore .ves-nav form input {
+    border-color: #ccc8e0;
+    background: #ffffff;
+    color: #2a2540;
+}
+
+.ves-bluestore .ves-nav form input::placeholder {
+    color: #a09ab8;
+}
+
+.ves-bluestore .ves-nav form button,
+.ves-bluestore .ves-nav .ves-icon-button {
+    color: #4a4470;
+}
+
+.ves-bluestore .ves-nav .ves-profile-trigger {
+    border-color: rgba(82, 36, 224, 0.4);
+    color: #2a2540;
+}
+
+.ves-bluestore .ves-nav .ves-profile-trigger:hover {
+    border-color: rgba(82, 36, 224, 0.7);
+    background: rgba(82, 36, 224, 0.08);
+}
+
+.ves-bluestore .ves-nav .ves-menu-panel,
+.ves-bluestore .ves-nav .ves-cart-panel {
+    background: #ffffff;
+    border-color: #d8d4eb;
+    color: #2a2540;
+}
+
+/* ---- Buttons ---- */
+.ves-bluestore .ves-button-primary {
+    background: #5224e0;
+    color: #ffffff;
+    box-shadow: 0 12px 28px rgba(82, 36, 224, 0.32);
+}
+
+.ves-bluestore .ves-button-primary:hover {
+    background: #6338f0;
+}
+
+.ves-bluestore .ves-button-secondary {
+    border-color: #5224e0;
+    color: #5224e0;
+    background: transparent;
+}
+
+.ves-bluestore .ves-button-secondary:hover {
+    background: rgba(82, 36, 224, 0.08);
+    border-color: #6338f0;
+    color: #6338f0;
+}
+
+/* Override inline Tailwind bg-black buttons/links to blue */
+.ves-bluestore button.bg-black,
+.ves-bluestore a.bg-black {
+    background-color: #5224e0 !important;
+    color: #fff !important;
+}
+
+.ves-bluestore button.bg-black:hover,
+.ves-bluestore a.bg-black:hover,
+.ves-bluestore button.hover\:bg-gray-900:hover,
+.ves-bluestore a.hover\:bg-gray-900:hover {
+    background-color: #6338f0 !important;
+}
+
+/* ---- Links ---- */
+.ves-bluestore .ves-link:hover {
+    color: #5224e0;
+}
+
+/* ---- Product cards ---- */
+.ves-bluestore .ves-product-card {
+    border-color: #e8e8e8;
+    border-radius: 0;
+}
+
+.ves-bluestore .ves-product-card:hover {
+    border-color: #5224e0;
+}
+
+/* ---- Sale panel ---- */
+.ves-bluestore .ves-sale-panel {
+    border-color: #e8e8e8;
+    background: #fafafa;
+}
+
+/* ---- Auth ---- */
+.ves-bluestore .ves-auth-field input:focus,
+.ves-bluestore .ves-auth-listbox-btn:focus,
+.ves-bluestore .ves-auth-field select:focus,
+.ves-bluestore .ves-auth-select:focus,
+.ves-bluestore .ves-auth-field textarea:focus,
+.ves-bluestore input:focus,
+.ves-bluestore select:focus,
+.ves-bluestore textarea:focus {
+    outline: none !important;
+    border-color: #5224e0 !important;
+    box-shadow: 0 0 0 3px rgba(82, 36, 224, 0.2) !important;
+}
+
+.ves-bluestore .ves-auth-submit {
+    background: #5224e0;
+    color: #ffffff;
+    box-shadow: 0 12px 28px rgba(82, 36, 224, 0.32);
+}
+
+.ves-bluestore .ves-auth-submit:hover {
+    background: #6338f0;
+}
+
+/* ---- Footer ---- */
+.ves-bluestore .ves-footer {
+    background: linear-gradient(180deg, #eeecf7 0%, #e7e4f2 100%);
+    border-top-color: #d8d4eb;
+    color: #2a2540;
+}
+
+.ves-bluestore .ves-footer p,
+.ves-bluestore .ves-footer nav a {
+    color: #4a4470;
+}
+
+.ves-bluestore .ves-footer nav a:hover {
+    color: #5224e0;
+}
+
+.ves-bluestore .ves-footer .ves-logo {
+    color: #5224e0;
+}
+
+.ves-bluestore .ves-footer > nav {
+    background: linear-gradient(180deg, #e7e4f2 0%, #e0dced 100%);
+    border-bottom-color: #ccc8e0;
+}
+
+.ves-bluestore .ves-footer > nav a {
+    color: #4a4470;
+}
+
+.ves-bluestore .ves-footer > nav a:hover {
+    color: #5224e0;
+}
+
+.ves-bluestore .ves-footer > nav li.before\:content-\[\'·\'\]::before {
+    color: #a8a2c0;
+}

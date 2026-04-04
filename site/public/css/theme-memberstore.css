@@ -1,0 +1,97 @@
+/* ============================================================
+   MEMBERSTORE / PEPTIDE THEME
+   Blue #0066CC · Navy #0a1628 · White #ffffff
+   ============================================================ */
+
+.ves-memberstore {
+    --ves-accent: #0066cc;
+    --ves-accent-ink: #ffffff;
+    --ves-header: #0a1628;
+}
+
+/* Announcement banner */
+.ves-memberstore .ves-announcement-bar {
+    background: #0a1628;
+    color: #e8f0fb;
+}
+
+/* ---- Navigation ---- */
+.ves-memberstore .ves-nav .ves-nav-link:hover {
+    color: #0066cc;
+}
+
+/* ---- Buttons ---- */
+.ves-memberstore .ves-button-primary {
+    background: #0066cc;
+    color: #ffffff;
+    box-shadow: 0 12px 28px rgba(0, 102, 204, 0.32);
+}
+
+.ves-memberstore .ves-button-primary:hover {
+    background: #0077ee;
+}
+
+.ves-memberstore .ves-button-secondary {
+    border-color: #0066cc;
+    color: #0066cc;
+    background: transparent;
+}
+
+.ves-memberstore .ves-button-secondary:hover {
+    background: rgba(0, 102, 204, 0.08);
+    border-color: #0077ee;
+    color: #0077ee;
+}
+
+/* Override inline Tailwind bg-black buttons/links to blue */
+.ves-memberstore button.bg-black,
+.ves-memberstore a.bg-black {
+    background-color: #0066cc !important;
+    color: #fff !important;
+}
+
+.ves-memberstore button.bg-black:hover,
+.ves-memberstore a.bg-black:hover,
+.ves-memberstore button.hover\:bg-gray-900:hover,
+.ves-memberstore a.hover\:bg-gray-900:hover {
+    background-color: #0077ee !important;
+}
+
+/* ---- Links ---- */
+.ves-memberstore .ves-link:hover {
+    color: #0066cc;
+}
+
+/* ---- Product cards ---- */
+.ves-memberstore .ves-product-card:hover {
+    border-color: #0066cc;
+}
+
+/* ---- Auth ---- */
+.ves-memberstore .ves-auth-field input:focus,
+.ves-memberstore .ves-auth-listbox-btn:focus,
+.ves-memberstore .ves-auth-field select:focus,
+.ves-memberstore .ves-auth-select:focus,
+.ves-memberstore .ves-auth-field textarea:focus,
+.ves-memberstore input:focus,
+.ves-memberstore select:focus,
+.ves-memberstore textarea:focus {
+    outline: none !important;
+    border-color: #0066cc !important;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2) !important;
+}
+
+.ves-memberstore .ves-auth-submit {
+    background: #0066cc;
+    color: #ffffff;
+    box-shadow: 0 12px 28px rgba(0, 102, 204, 0.32);
+}
+
+.ves-memberstore .ves-auth-submit:hover {
+    background: #0077ee;
+}
+
+/* ---- Footer ---- */
+.ves-memberstore .ves-footer nav a:hover {
+    color: #0066cc;
+}

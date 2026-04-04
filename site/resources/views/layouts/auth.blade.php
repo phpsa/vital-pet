@@ -25,13 +25,17 @@
         rel="stylesheet"
     >
     <link
+        href="{{ asset('css/theme-' . \App\Support\TemplateHelper::active() . '.css') }}"
+        rel="stylesheet"
+    >
+    <link
         rel="icon"
         href="{{ asset('favicon.svg') }}"
     >
     @livewireStyles
 </head>
 
-<body class="ves-theme antialiased @if(\App\Support\TemplateHelper::isPetstore()) ves-petstore @endif">
+<body class="ves-theme antialiased ves-{{ \App\Support\TemplateHelper::active() }}">
     <header class="relative border-b border-gray-100 ves-nav">
         <div class="flex items-center justify-between h-16 px-4 mx-auto max-w-screen-2xl sm:px-6 lg:px-8">
             <a class="flex items-center flex-shrink-0"

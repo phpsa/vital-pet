@@ -99,4 +99,12 @@ class TemplateHelper
     {
         return self::is('memberstore');
     }
+
+    /**
+     * Check if bluestore is active
+     */
+    public static function isBluestore(): bool
+    {
+        return self::is('bluestore');
+    }
 }

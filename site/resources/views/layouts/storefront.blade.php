@@ -24,6 +24,10 @@
         href="{{ asset('css/theme.css') }}"
         rel="stylesheet"
     >
+    <link
+        href="{{ asset('css/theme-' . \App\Support\TemplateHelper::active() . '.css') }}"
+        rel="stylesheet"
+    >
 
     <link
         rel="icon"
@@ -32,7 +36,7 @@
     @livewireStyles
 </head>
 
-<body class="ves-theme antialiased @if(\App\Support\TemplateHelper::isPetstore()) ves-petstore @endif">
+<body class="ves-theme antialiased ves-{{ \App\Support\TemplateHelper::active() }}">
     <x-announcement-banner />
     @livewire('components.navigation')
 

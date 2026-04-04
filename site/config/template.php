@@ -30,6 +30,7 @@ return [
     'templates' => [
         'petstore',
         'memberstore',
+        'bluestore',
     ],
 
     /*
@@ -74,6 +75,15 @@ return [
             'brand_color' => '#0066CC',
             'image_directory' => 'img/memberstore/',
             'hero_image' => 'img/memberstore/hero-peptide.jpg',
+        ],
+        'bluestore' => [
+            'name' => 'Blue Store',
+            'description' => 'Violet-blue themed storefront',
+            'logo' => 'img/bluestore-logo.svg',
+            'favicon' => 'favicon-blue.ico',
+            'brand_color' => '#5224E0',
+            'image_directory' => 'img/bluestore/',
+            'hero_image' => 'img/bluestore/hero.jpg',
         ],
     ],
 

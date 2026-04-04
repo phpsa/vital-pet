@@ -1,0 +1,214 @@
+/* ============================================================
+   VITAL STAG / PETSTORE THEME
+   Gold #C49128 · Black #0d0d0d · White #ffffff
+   ============================================================ */
+
+.ves-petstore {
+    --ves-bg: #ffffff;
+    --ves-bg-soft: #fafafa;
+    --ves-panel: #ffffff;
+    --ves-line: #e8e8e8;
+    --ves-line-strong: #cccccc;
+    --ves-text: #0d0d0d;
+    --ves-muted: #5a5a5a;
+    --ves-accent: #c49128;
+    --ves-accent-ink: #0d0d0d;
+    --ves-header: #0d0d0d;
+}
+
+body.ves-petstore {
+    background: #ffffff;
+}
+
+/* Headings — classic serif */
+.ves-petstore h1,
+.ves-petstore h2,
+.ves-petstore h3 {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.04em;
+}
+
+.ves-petstore .ves-serif {
+    font-family: 'Cinzel', serif;
+}
+
+/* Kicker */
+.ves-petstore .ves-kicker {
+    border-color: rgba(196, 145, 40, 0.5);
+    color: #c49128;
+}
+
+/* Announcement banner */
+.ves-petstore .ves-announcement-bar {
+    background: #c49128;
+    color: #0d0d0d;
+}
+
+/* ---- Navigation ---- */
+.ves-petstore .ves-nav {
+    background: linear-gradient(180deg, #faf8f5 0%, #f4f1ec 100%);
+    border-bottom-color: #e0dbd3;
+}
+
+.ves-petstore .ves-nav .ves-logo {
+    color: #c49128;
+}
+
+.ves-petstore .ves-nav .ves-nav-link {
+    color: #3a3630;
+}
+
+.ves-petstore .ves-nav .ves-nav-link:hover {
+    color: #c49128;
+}
+
+.ves-petstore .ves-nav form input {
+    border-color: #d8d2c8;
+    background: #ffffff;
+    color: #3a3630;
+}
+
+.ves-petstore .ves-nav form input::placeholder {
+    color: #b0a898;
+}
+
+.ves-petstore .ves-nav form button,
+.ves-petstore .ves-nav .ves-icon-button {
+    color: #5a534a;
+}
+
+.ves-petstore .ves-nav .ves-profile-trigger {
+    border-color: rgba(196, 145, 40, 0.4);
+    color: #3a3630;
+}
+
+.ves-petstore .ves-nav .ves-profile-trigger:hover {
+    border-color: rgba(196, 145, 40, 0.7);
+    background: rgba(196, 145, 40, 0.08);
+}
+
+.ves-petstore .ves-nav .ves-menu-panel,
+.ves-petstore .ves-nav .ves-cart-panel {
+    background: #ffffff;
+    border-color: #e0dbd3;
+    color: #3a3630;
+}
+
+/* ---- Buttons ---- */
+.ves-petstore .ves-button-primary {
+    background: #c49128;
+    color: #0d0d0d;
+    box-shadow: 0 12px 28px rgba(196, 145, 40, 0.32);
+}
+
+.ves-petstore .ves-button-primary:hover {
+    background: #d4a030;
+}
+
+.ves-petstore .ves-button-secondary {
+    border-color: #c49128;
+    color: #c49128;
+    background: transparent;
+}
+
+.ves-petstore .ves-button-secondary:hover {
+    background: rgba(196, 145, 40, 0.08);
+    border-color: #d4a030;
+    color: #d4a030;
+}
+
+/* Override inline Tailwind bg-black buttons/links to gold */
+.ves-petstore button.bg-black,
+.ves-petstore a.bg-black {
+    background-color: #c49128 !important;
+    color: #fff !important;
+}
+
+.ves-petstore button.bg-black:hover,
+.ves-petstore a.bg-black:hover,
+.ves-petstore button.hover\:bg-gray-900:hover,
+.ves-petstore a.hover\:bg-gray-900:hover {
+    background-color: #d4a030 !important;
+}
+
+/* ---- Links ---- */
+.ves-petstore .ves-link:hover {
+    color: #c49128;
+}
+
+/* ---- Product cards ---- */
+.ves-petstore .ves-product-card {
+    border-color: #e8e8e8;
+    border-radius: 0;
+}
+
+.ves-petstore .ves-product-card:hover {
+    border-color: #c49128;
+}
+
+/* ---- Sale panel ---- */
+.ves-petstore .ves-sale-panel {
+    border-color: #e8e8e8;
+    background: #fafafa;
+}
+
+/* ---- Auth ---- */
+.ves-petstore .ves-auth-field input:focus,
+.ves-petstore .ves-auth-listbox-btn:focus,
+.ves-petstore .ves-auth-field select:focus,
+.ves-petstore .ves-auth-select:focus,
+.ves-petstore .ves-auth-field textarea:focus,
+.ves-petstore input:focus,
+.ves-petstore select:focus,
+.ves-petstore textarea:focus {
+    outline: none !important;
+    border-color: #c49128 !important;
+    box-shadow: 0 0 0 3px rgba(196, 145, 40, 0.2) !important;
+}
+
+.ves-petstore .ves-auth-submit {
+    background: #c49128;
+    color: #0d0d0d;
+    box-shadow: 0 12px 28px rgba(196, 145, 40, 0.32);
+}
+
+.ves-petstore .ves-auth-submit:hover {
+    background: #d4a030;
+}
+
+/* ---- Footer ---- */
+.ves-petstore .ves-footer {
+    background: linear-gradient(180deg, #f4f1ec 0%, #ede9e2 100%);
+    border-top-color: #e0dbd3;
+    color: #3a3630;
+}
+
+.ves-petstore .ves-footer p,
+.ves-petstore .ves-footer nav a {
+    color: #5a534a;
+}
+
+.ves-petstore .ves-footer nav a:hover {
+    color: #c49128;
+}
+
+.ves-petstore .ves-footer .ves-logo {
+    color: #c49128;
+}
+
+.ves-petstore .ves-footer > nav {
+    background: linear-gradient(180deg, #eceae5 0%, #e5e1db 100%);
+    border-bottom-color: #d8d2c8;
+}
+
+.ves-petstore .ves-footer > nav a {
+    color: #5a534a;
+}
+
+.ves-petstore .ves-footer > nav a:hover {
+    color: #c49128;
+}
+
+.ves-petstore .ves-footer > nav li.before\:content-\[\'·\'\]::before {
+    color: #b8b0a4;
+}
